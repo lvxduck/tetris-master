@@ -14,14 +14,14 @@ class TileWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const padding = 2.0;
+    const padding = 1.0;
     return Container(
       margin: const EdgeInsets.all(padding),
       width: size - padding * 2,
       height: size - padding * 2,
       decoration: BoxDecoration(
         color: color,
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: BorderRadius.circular(2),
       ),
       child: child,
     );
