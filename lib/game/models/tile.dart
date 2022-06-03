@@ -6,4 +6,9 @@ class Tile {
   int x;
   int y;
   Color color = Colors.red;
+
+  @override
+  String toString() {
+    return '$x, $y, $color';
+  }
 }

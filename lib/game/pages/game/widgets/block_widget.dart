@@ -13,17 +13,21 @@ class BlockWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: block.currentTiles.map((e) {
-        return Positioned(
-          top: e.y * tileSize,
-          left: e.x * tileSize,
-          child: TileWidget(
-            color: Colors.red,
-            size: tileSize,
-          ),
-        );
-      }).toList(),
+    return SizedBox(
+      width: tileSize * 4,
+      height: tileSize * 3,
+      child: Stack(
+        children: block.currentTiles.map((e) {
+          return Positioned(
+            top: e.y * tileSize,
+            left: e.x * tileSize,
+            child: TileWidget(
+              color: Colors.red,
+              size: tileSize,
+            ),
+          );
+        }).toList(),
+      ),
     );
   }
 }

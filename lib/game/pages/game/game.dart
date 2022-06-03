@@ -1,11 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:tetris_master/game/models/block.dart';
 import 'package:tetris_master/game/pages/game/widgets/board.dart';
+import 'package:tetris_master/game/pages/game/widgets/next_blocks.dart';
 
 import '../../group_button_controls.dart';
-import 'widgets/block_widget.dart';
 
 class Game extends StatefulWidget {
   const Game({Key? key}) : super(key: key);
@@ -75,12 +74,11 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
                   ),
                 ),
                 Expanded(
-                  child: SizedBox(
-                    width: 80,
-                    height: 400,
-                    child: BlockWidget(
-                      block: TBlock(1),
-                      tileSize: 32,
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: NextBlocks(
+                      gameSize: gameSize,
+                      extraGameHeight: 3,
                     ),
                   ),
                 ),

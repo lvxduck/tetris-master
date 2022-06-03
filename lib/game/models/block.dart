@@ -80,7 +80,7 @@ class IBlock extends Block {
             [Tile(0, 2), Tile(1, 2), Tile(2, 2), Tile(3, 2)],
           ],
           color: Colors.red,
-          orientationIndex: 0,
+          orientationIndex: orientationIndex,
         );
 }
 
