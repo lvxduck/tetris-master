@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:tetris_master/game/pages/game/widgets/board.dart';
-import 'package:tetris_master/game/pages/game/widgets/next_blocks.dart';
 
 import '../../group_button_controls.dart';
 
@@ -35,55 +34,66 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
       body: Column(
         children: [
           Expanded(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: Container(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text('LINES'),
-                          Text(numberOfLine.toString()),
-                          const SizedBox(height: 8),
-                          const Text('TIME'),
-                          Text(Duration(milliseconds: time)
-                              .toString()
-                              .substring(0, 9)),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                AspectRatio(
-                  aspectRatio: gameSize.width / (gameSize.height + 3),
-                  child: Board(
-                    gameSize: gameSize,
-                    onRemoveLine: (quantity) {
-                      setState(() {
-                        numberOfLine += quantity;
-                      });
-                    },
-                    onEndGame: () {
-                      timer?.cancel();
-                    },
-                  ),
-                ),
-                Expanded(
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: NextBlocks(
-                      gameSize: gameSize,
-                      extraGameHeight: 3,
-                    ),
-                  ),
-                ),
-              ],
+            child: Board(
+              gameSize: gameSize,
+              onRemoveLine: (quantity) {
+                setState(() {
+                  numberOfLine += quantity;
+                });
+              },
+              onEndGame: () {
+                timer?.cancel();
+              },
             ),
+            // child: Row(
+            //   mainAxisAlignment: MainAxisAlignment.center,
+            //   children: [
+            //     Expanded(
+            //       child: Align(
+            //         alignment: Alignment.centerRight,
+            //         child: Container(
+            //           padding: const EdgeInsets.all(16),
+            //           child: Column(
+            //             crossAxisAlignment: CrossAxisAlignment.end,
+            //             mainAxisAlignment: MainAxisAlignment.center,
+            //             children: [
+            //               const Text('LINES'),
+            //               Text(numberOfLine.toString()),
+            //               const SizedBox(height: 8),
+            //               const Text('TIME'),
+            //               Text(Duration(milliseconds: time)
+            //                   .toString()
+            //                   .substring(0, 9)),
+            //             ],
+            //           ),
+            //         ),
+            //       ),
+            //     ),
+            //     AspectRatio(
+            //       aspectRatio: gameSize.width / (gameSize.height + 3),
+            //       child: Board(
+            //         gameSize: gameSize,
+            //         onRemoveLine: (quantity) {
+            //           setState(() {
+            //             numberOfLine += quantity;
+            //           });
+            //         },
+            //         onEndGame: () {
+            //           timer?.cancel();
+            //         },
+            //       ),
+            //     ),
+            //     Expanded(
+            //       child: Align(
+            //         alignment: Alignment.topLeft,
+            //         child: NextBlocks(
+            //           gameSize: gameSize,
+            //           extraGameHeight: 3,
+            //         ),
+            //       ),
+            //     ),
+            //   ],
+            // ),
           ),
           const GroupButtonControls(),
         ],

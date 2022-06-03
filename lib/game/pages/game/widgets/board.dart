@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import '../../../models/block.dart';
 import '../../../models/tile.dart';
 import 'empty_tile_widget.dart';
+import 'next_blocks.dart';
 import 'tile_widget.dart';
 
 class Board extends StatefulWidget {
@@ -254,47 +255,66 @@ class _BoardState extends State<Board> {
     return RawKeyboardListener(
       focusNode: _focusNode,
       onKey: handleKeyEvent,
-      child: LayoutBuilder(builder: (context, box) {
-        final tileSize = box.maxWidth / gameSize.width;
-        List<Widget> tiles = [];
-        for (int x = 0; x < gameSize.width; x++) {
-          for (int y = 0; y < gameSize.height; y++) {
-            tiles.add(
-              Positioned(
-                top: (y + maxBlockHeight) * tileSize,
-                left: x * tileSize,
-                child: map[x][y] == null
-                    ? EmptyTileWidget(
-                        size: tileSize,
-                      )
-                    : TileWidget(
-                        color: map[x][y]!.color,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Expanded(child: Text('sdsd')),
+          AspectRatio(
+            aspectRatio: gameSize.width / (gameSize.height + 3),
+            child: LayoutBuilder(builder: (context, box) {
+              final tileSize = box.maxWidth / gameSize.width;
+              List<Widget> tiles = [];
+              for (int x = 0; x < gameSize.width; x++) {
+                for (int y = 0; y < gameSize.height; y++) {
+                  tiles.add(
+                    Positioned(
+                      top: (y + maxBlockHeight) * tileSize,
+                      left: x * tileSize,
+                      child: map[x][y] == null
+                          ? EmptyTileWidget(
+                              size: tileSize,
+                            )
+                          : TileWidget(
+                              color: map[x][y]!.color,
+                              size: tileSize,
+                            ),
+                    ),
+                  );
+                }
+              }
+              if (currentBlock != null) {
+                for (final tile in currentBlock!.currentTiles) {
+                  tiles.add(
+                    AnimatedPositioned(
+                      key: Key('key :${tile.x} ${tile.y}'),
+                      top: (tile.y + currentBlock!.y + maxBlockHeight) *
+                          tileSize,
+                      left: (tile.x + currentBlock!.x) * tileSize,
+                      duration: const Duration(milliseconds: 10),
+                      child: TileWidget(
+                        color: tile.color,
                         size: tileSize,
                       ),
+                    ),
+                  );
+                }
+              }
+              return Stack(
+                children: tiles,
+              );
+            }),
+          ),
+          Expanded(
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: NextBlocks(
+                gameSize: gameSize,
+                extraGameHeight: 3,
               ),
-            );
-          }
-        }
-        if (currentBlock != null) {
-          for (final tile in currentBlock!.currentTiles) {
-            tiles.add(
-              AnimatedPositioned(
-                key: Key('key :${tile.x} ${tile.y}'),
-                top: (tile.y + currentBlock!.y + maxBlockHeight) * tileSize,
-                left: (tile.x + currentBlock!.x) * tileSize,
-                duration: const Duration(milliseconds: 10),
-                child: TileWidget(
-                  color: tile.color,
-                  size: tileSize,
-                ),
-              ),
-            );
-          }
-        }
-        return Stack(
-          children: tiles,
-        );
-      }),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
