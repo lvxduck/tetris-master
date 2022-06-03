@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-
-import 'game/game.dart';
+import 'package:tetris_master/game/core/theme/game_theme.dart';
+import 'package:tetris_master/game/pages/game/game.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,7 +15,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      theme: ThemeData.dark().copyWith(),
+      theme: GameTheme.themeData,
+      // theme: ThemeData.dark().copyWith(),
       home: const Game(),
     );
   }

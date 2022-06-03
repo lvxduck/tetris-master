@@ -3,18 +3,22 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:tetris_master/game/widgets/empty_tile_widget.dart';
 
-import 'models/block.dart';
-import 'models/tile.dart';
-import 'widgets/tile_widget.dart';
+import '../../../models/block.dart';
+import '../../../models/tile.dart';
+import 'empty_tile_widget.dart';
+import 'tile_widget.dart';
 
 class Board extends StatefulWidget {
   const Board({
     Key? key,
     this.gameSize = const Size(10, 20),
+    required this.onRemoveLine,
+    required this.onEndGame,
   }) : super(key: key);
   final Size gameSize;
+  final Function(int quantity) onRemoveLine;
+  final VoidCallback onEndGame;
 
   @override
   _BoardState createState() => _BoardState();
@@ -72,32 +76,63 @@ class _BoardState extends State<Board> {
     });
   }
 
+  void endGame() {
+    timer?.cancel();
+    setState(() {});
+    widget.onEndGame();
+  }
+
+  void handleMapChange() {
+    var numberOfLine = 0;
+    for (int y = 0; y < gameSize.height; y++) {
+      bool shouldDelete = true;
+      for (int x = 0; x < gameSize.width; x++) {
+        if (map[x][y] == null) {
+          shouldDelete = false;
+        }
+      }
+      // remove line and calculate point
+      if (shouldDelete) {
+        numberOfLine += 1;
+        for (int x = 0; x < gameSize.width; x++) {
+          map[x][y] = null;
+        }
+        translateMapDown(y);
+      }
+      //
+    }
+    widget.onRemoveLine(numberOfLine);
+  }
+
+  void translateMapDown(int startY) {
+    for (int y = startY; y > 0; y--) {
+      for (int x = 0; x < gameSize.width; x++) {
+        map[x][y] = map[x][y - 1];
+      }
+    }
+  }
+
   void update(_) async {
     if (isAbleToMoveDown()) {
       currentBlock?.move(BlockMovement.down);
     } else {
-      // merge block to map and random new block
-      for (final tile in currentBlock!.currentTiles) {
-        if (tile.y + currentBlock!.y >= 0) {
-          map[tile.x + currentBlock!.x][tile.y + currentBlock!.y] = tile;
-        } else {
-          endGame();
-          return;
-        }
-      }
-      setState(() {
-        currentBlock = getRandomBlock();
-      });
-      return;
+      mergeBlock();
     }
-    // check collision with bottom board;
-    if (currentBlock!.y + currentBlock!.height == gameSize.height) {
-      for (final tile in currentBlock!.currentTiles) {
-        map[tile.x + currentBlock!.x][tile.y + currentBlock!.y] = tile;
-      }
-      currentBlock = getRandomBlock();
-    }
+    handleMapChange();
     setState(() {});
+  }
+
+  void mergeBlock() {
+    for (final tile in currentBlock!.currentTiles) {
+      if (tile.y + currentBlock!.y >= 0) {
+        map[tile.x + currentBlock!.x][tile.y + currentBlock!.y] = tile;
+      } else {
+        endGame();
+        return;
+      }
+    }
+    currentBlock = getRandomBlock();
+    handleMapChange();
   }
 
   bool isAbleToMoveDown() {
@@ -194,14 +229,10 @@ class _BoardState extends State<Board> {
           currentBlock?.move(BlockMovement.down);
           setState(() {});
         }
+        mergeBlock();
       }
       setState(() {});
     }
-  }
-
-  void endGame() {
-    timer?.cancel();
-    setState(() {});
   }
 
   @override
@@ -223,50 +254,47 @@ class _BoardState extends State<Board> {
     return RawKeyboardListener(
       focusNode: _focusNode,
       onKey: handleKeyEvent,
-      child: AspectRatio(
-        aspectRatio: gameSize.width / (gameSize.height + maxBlockHeight),
-        child: LayoutBuilder(builder: (context, box) {
-          final tileSize = box.maxWidth / gameSize.width;
-          List<Widget> tiles = [];
-          for (int x = 0; x < gameSize.width; x++) {
-            for (int y = 0; y < gameSize.height; y++) {
-              tiles.add(
-                Positioned(
-                  top: (y + maxBlockHeight) * tileSize,
-                  left: x * tileSize,
-                  child: map[x][y] == null
-                      ? EmptyTileWidget(
-                          size: tileSize,
-                        )
-                      : TileWidget(
-                          color: map[x][y]!.color,
-                          size: tileSize,
-                        ),
-                ),
-              );
-            }
+      child: LayoutBuilder(builder: (context, box) {
+        final tileSize = box.maxWidth / gameSize.width;
+        List<Widget> tiles = [];
+        for (int x = 0; x < gameSize.width; x++) {
+          for (int y = 0; y < gameSize.height; y++) {
+            tiles.add(
+              Positioned(
+                top: (y + maxBlockHeight) * tileSize,
+                left: x * tileSize,
+                child: map[x][y] == null
+                    ? EmptyTileWidget(
+                        size: tileSize,
+                      )
+                    : TileWidget(
+                        color: map[x][y]!.color,
+                        size: tileSize,
+                      ),
+              ),
+            );
           }
-          if (currentBlock != null) {
-            for (final tile in currentBlock!.currentTiles) {
-              tiles.add(
-                AnimatedPositioned(
-                  key: Key('key :${tile.x} ${tile.y}'),
-                  top: (tile.y + currentBlock!.y + maxBlockHeight) * tileSize,
-                  left: (tile.x + currentBlock!.x) * tileSize,
-                  duration: const Duration(milliseconds: 10),
-                  child: TileWidget(
-                    color: tile.color,
-                    size: tileSize,
-                  ),
+        }
+        if (currentBlock != null) {
+          for (final tile in currentBlock!.currentTiles) {
+            tiles.add(
+              AnimatedPositioned(
+                key: Key('key :${tile.x} ${tile.y}'),
+                top: (tile.y + currentBlock!.y + maxBlockHeight) * tileSize,
+                left: (tile.x + currentBlock!.x) * tileSize,
+                duration: const Duration(milliseconds: 10),
+                child: TileWidget(
+                  color: tile.color,
+                  size: tileSize,
                 ),
-              );
-            }
+              ),
+            );
           }
-          return Stack(
-            children: tiles,
-          );
-        }),
-      ),
+        }
+        return Stack(
+          children: tiles,
+        );
+      }),
     );
   }
 
