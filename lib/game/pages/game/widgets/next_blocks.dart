@@ -8,10 +8,12 @@ class NextBlocks extends StatelessWidget {
     Key? key,
     required this.gameSize,
     required this.extraGameHeight,
+    required this.blocks,
   }) : super(key: key);
 
   final Size gameSize;
   final int extraGameHeight;
+  final List<Block> blocks;
 
   @override
   Widget build(BuildContext context) {
@@ -31,18 +33,9 @@ class NextBlocks extends StatelessWidget {
                   'NEXT',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                BlockWidget(
-                  block: TBlock(1),
-                  tileSize: tileSize,
-                ),
-                BlockWidget(
-                  block: LBlock(1),
-                  tileSize: tileSize,
-                ),
-                BlockWidget(
-                  block: IBlock(1),
-                  tileSize: tileSize,
-                ),
+                ...blocks
+                    .map((e) => BlockWidget(block: e, tileSize: tileSize))
+                    .toList(),
               ],
             );
           },

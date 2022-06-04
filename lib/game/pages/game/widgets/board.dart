@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -39,152 +38,8 @@ class _BoardState extends State<Board> {
   bool isGameOver = false;
   int score = 0;
   Block? currentBlock;
+  List<Block> nextRandomBlocks = [];
   Timer? timer;
-
-  Block getRandomBlock() {
-    int blockType = Random().nextInt(7);
-    switch (blockType) {
-      case 0:
-        return IBlock(1);
-      case 1:
-        return JBlock(1);
-      case 2:
-        return LBlock(1);
-      case 3:
-        return OBlock(1);
-      case 4:
-        return TBlock(1);
-      case 5:
-        return SBlock(1);
-      case 6:
-        return ZBlock(1);
-      default:
-        throw Exception('Block not found');
-    }
-  }
-
-  void startGame() {
-    setState(() {
-      isPlaying = true;
-      isGameOver = false;
-      score = 0;
-      currentBlock = getRandomBlock();
-    });
-    Future.delayed(const Duration(milliseconds: 100), () {
-      currentBlock?.move(BlockMovement.down);
-      timer = Timer.periodic(duration, update);
-    });
-  }
-
-  void endGame() {
-    timer?.cancel();
-    setState(() {});
-    timerKey.currentState!.stopTimer();
-    widget.onEndGame();
-  }
-
-  void handleMapChange() {
-    var numberOfLine = 0;
-    for (int y = 0; y < gameSize.height; y++) {
-      bool shouldDelete = true;
-      for (int x = 0; x < gameSize.width; x++) {
-        if (map[x][y] == null) {
-          shouldDelete = false;
-        }
-      }
-      if (shouldDelete) {
-        numberOfLine += 1;
-        for (int x = 0; x < gameSize.width; x++) {
-          map[x][y] = null;
-        }
-        translateMapDown(y);
-      }
-    }
-    setState(() {
-      this.numberOfLine += numberOfLine;
-    });
-  }
-
-  void translateMapDown(int startY) {
-    for (int y = startY; y > 0; y--) {
-      for (int x = 0; x < gameSize.width; x++) {
-        map[x][y] = map[x][y - 1];
-      }
-    }
-  }
-
-  void mergeBlock() {
-    for (final tile in currentBlock!.currentTiles) {
-      if (tile.y + currentBlock!.y >= 0) {
-        map[tile.x + currentBlock!.x][tile.y + currentBlock!.y] = tile;
-      } else {
-        endGame();
-        return;
-      }
-    }
-    currentBlock = getRandomBlock();
-    handleMapChange();
-  }
-
-  bool isValidBlock() {
-    for (final tile in currentBlock!.currentTiles) {
-      if (tile.x + currentBlock!.x < 0 ||
-          tile.x + currentBlock!.x >= gameSize.width) {
-        return false;
-      }
-      if (tile.y + currentBlock!.y >= gameSize.height) {
-        return false;
-      }
-      if (tile.y + currentBlock!.y >= 0 &&
-          map[tile.x + currentBlock!.x][tile.y + currentBlock!.y] != null) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  void handleKeyEvent(RawKeyEvent event) {
-    if (event is RawKeyDownEvent) {
-      if (event.isKeyPressed(LogicalKeyboardKey.arrowRight)) {
-        currentBlock?.move(BlockMovement.right, 1);
-        if (!isValidBlock()) {
-          currentBlock?.move(BlockMovement.left, 1);
-        }
-      }
-      if (event.isKeyPressed(LogicalKeyboardKey.arrowLeft)) {
-        currentBlock?.move(BlockMovement.left, 1);
-        if (!isValidBlock()) {
-          currentBlock?.move(BlockMovement.right, 1);
-        }
-      }
-      if (event.isKeyPressed(LogicalKeyboardKey.arrowDown)) {
-        currentBlock?.move(BlockMovement.down, 1);
-        if (!isValidBlock()) {
-          currentBlock?.move(BlockMovement.up, 1);
-        }
-      }
-      if (event.isKeyPressed(LogicalKeyboardKey.arrowUp)) {
-        for (int distance in [0, -1, 1, -2, 2]) {
-          currentBlock?.move(BlockMovement.right, distance);
-          currentBlock?.move(BlockMovement.rotateClockWise);
-          if (!isValidBlock()) {
-            currentBlock?.move(BlockMovement.rotateCounterClockWise);
-            currentBlock?.move(BlockMovement.left, distance);
-          } else {
-            break;
-          }
-        }
-      }
-      if (event.isKeyPressed(LogicalKeyboardKey.space)) {
-        do {
-          currentBlock?.move(BlockMovement.down, 1);
-        } while (isValidBlock());
-        currentBlock?.move(BlockMovement.up, 1);
-        mergeBlock();
-      }
-      setState(() {});
-    }
-  }
 
   void update(_) async {
     currentBlock?.move(BlockMovement.down, 1);
@@ -199,6 +54,9 @@ class _BoardState extends State<Board> {
   @override
   void initState() {
     super.initState();
+    for (int i = 1; i <= 5; i++) {
+      nextRandomBlocks.add(Block.getRandomBlock());
+    }
     map = List.generate(
       gameSize.width.toInt(),
       (index) => List.generate(
@@ -286,6 +144,7 @@ class _BoardState extends State<Board> {
             child: Align(
               alignment: Alignment.topLeft,
               child: NextBlocks(
+                blocks: nextRandomBlocks,
                 gameSize: gameSize,
                 extraGameHeight: 3,
               ),
@@ -301,5 +160,135 @@ class _BoardState extends State<Board> {
     super.dispose();
     timer?.cancel();
     _focusNode.dispose();
+  }
+
+  void startGame() {
+    setState(() {
+      isPlaying = true;
+      isGameOver = false;
+      score = 0;
+      // currentBlock = nextRandomBlocks.first;
+      randomNextBlock();
+    });
+    Future.delayed(const Duration(milliseconds: 100), () {
+      currentBlock?.move(BlockMovement.down);
+      timer = Timer.periodic(duration, update);
+    });
+  }
+
+  void endGame() {
+    timer?.cancel();
+    setState(() {});
+    timerKey.currentState!.stopTimer();
+    widget.onEndGame();
+  }
+
+  void handleMapChange() {
+    var numberOfLine = 0;
+    for (int y = 0; y < gameSize.height; y++) {
+      bool shouldDelete = true;
+      for (int x = 0; x < gameSize.width; x++) {
+        if (map[x][y] == null) {
+          shouldDelete = false;
+        }
+      }
+      if (shouldDelete) {
+        numberOfLine += 1;
+        for (int x = 0; x < gameSize.width; x++) {
+          map[x][y] = null;
+        }
+        translateMapDown(y);
+      }
+    }
+    setState(() {
+      this.numberOfLine += numberOfLine;
+    });
+  }
+
+  void translateMapDown(int startY) {
+    for (int y = startY; y > 0; y--) {
+      for (int x = 0; x < gameSize.width; x++) {
+        map[x][y] = map[x][y - 1];
+      }
+    }
+  }
+
+  void randomNextBlock() {
+    currentBlock = nextRandomBlocks.first;
+    nextRandomBlocks.removeAt(0);
+    nextRandomBlocks.add(Block.getRandomBlock());
+  }
+
+  void mergeBlock() {
+    for (final tile in currentBlock!.currentTiles) {
+      if (tile.y + currentBlock!.y >= 0) {
+        map[tile.x + currentBlock!.x][tile.y + currentBlock!.y] = tile;
+      } else {
+        endGame();
+        return;
+      }
+    }
+    randomNextBlock();
+    handleMapChange();
+  }
+
+  bool isValidBlock() {
+    for (final tile in currentBlock!.currentTiles) {
+      if (tile.x + currentBlock!.x < 0 ||
+          tile.x + currentBlock!.x >= gameSize.width) {
+        return false;
+      }
+      if (tile.y + currentBlock!.y >= gameSize.height) {
+        return false;
+      }
+      if (tile.y + currentBlock!.y >= 0 &&
+          map[tile.x + currentBlock!.x][tile.y + currentBlock!.y] != null) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  void handleKeyEvent(RawKeyEvent event) {
+    if (event is RawKeyDownEvent) {
+      if (event.isKeyPressed(LogicalKeyboardKey.arrowRight)) {
+        currentBlock?.move(BlockMovement.right, 1);
+        if (!isValidBlock()) {
+          currentBlock?.move(BlockMovement.left, 1);
+        }
+      }
+      if (event.isKeyPressed(LogicalKeyboardKey.arrowLeft)) {
+        currentBlock?.move(BlockMovement.left, 1);
+        if (!isValidBlock()) {
+          currentBlock?.move(BlockMovement.right, 1);
+        }
+      }
+      if (event.isKeyPressed(LogicalKeyboardKey.arrowDown)) {
+        currentBlock?.move(BlockMovement.down, 1);
+        if (!isValidBlock()) {
+          currentBlock?.move(BlockMovement.up, 1);
+        }
+      }
+      if (event.isKeyPressed(LogicalKeyboardKey.arrowUp)) {
+        for (int distance in [0, -1, 1, -2, 2]) {
+          currentBlock?.move(BlockMovement.right, distance);
+          currentBlock?.move(BlockMovement.rotateClockWise);
+          if (!isValidBlock()) {
+            currentBlock?.move(BlockMovement.rotateCounterClockWise);
+            currentBlock?.move(BlockMovement.left, distance);
+          } else {
+            break;
+          }
+        }
+      }
+      if (event.isKeyPressed(LogicalKeyboardKey.space)) {
+        do {
+          currentBlock?.move(BlockMovement.down, 1);
+        } while (isValidBlock());
+        currentBlock?.move(BlockMovement.up, 1);
+        mergeBlock();
+      }
+      setState(() {});
+    }
   }
 }

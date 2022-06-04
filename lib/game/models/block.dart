@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:tetris_master/game/models/tile.dart';
 
@@ -48,6 +50,28 @@ class Block {
       if (tile.y > maxY) maxY = tile.y;
     }
     return maxY + 1;
+  }
+
+  static Block getRandomBlock() {
+    int blockType = Random().nextInt(7);
+    switch (blockType) {
+      case 0:
+        return IBlock(1);
+      case 1:
+        return JBlock(1);
+      case 2:
+        return LBlock(1);
+      case 3:
+        return OBlock(1);
+      case 4:
+        return TBlock(1);
+      case 5:
+        return SBlock(1);
+      case 6:
+        return ZBlock(1);
+      default:
+        throw Exception('Block not found');
+    }
   }
 
   void move(BlockMovement blockMovement, [int distance = 1]) {
