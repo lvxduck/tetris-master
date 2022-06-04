@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:tetris_master/game/pages/game/widgets/timer.dart';
 
 import '../../../models/block.dart';
 import '../../../models/tile.dart';
@@ -14,11 +15,9 @@ class Board extends StatefulWidget {
   const Board({
     Key? key,
     this.gameSize = const Size(10, 20),
-    required this.onRemoveLine,
     required this.onEndGame,
   }) : super(key: key);
   final Size gameSize;
-  final Function(int quantity) onRemoveLine;
   final VoidCallback onEndGame;
 
   @override
@@ -26,6 +25,7 @@ class Board extends StatefulWidget {
 }
 
 class _BoardState extends State<Board> {
+  final timerKey = GlobalKey<TimerWidgetState>();
   final FocusNode _focusNode = FocusNode();
   late Size gameSize = widget.gameSize;
 
@@ -33,6 +33,7 @@ class _BoardState extends State<Board> {
   late List<List<Tile?>> map;
   final duration = const Duration(milliseconds: 1000);
   final int maxBlockHeight = 3;
+  int numberOfLine = 0;
 
   bool isPlaying = false;
   bool isGameOver = false;
@@ -42,23 +43,21 @@ class _BoardState extends State<Board> {
 
   Block getRandomBlock() {
     int blockType = Random().nextInt(7);
-    int orientationIndex = Random().nextInt(4);
-
     switch (blockType) {
       case 0:
-        return IBlock(orientationIndex);
+        return IBlock(1);
       case 1:
-        return JBlock(orientationIndex);
+        return JBlock(1);
       case 2:
-        return LBlock(orientationIndex);
+        return LBlock(1);
       case 3:
-        return OBlock(orientationIndex);
+        return OBlock(1);
       case 4:
-        return TBlock(orientationIndex);
+        return TBlock(1);
       case 5:
-        return SBlock(orientationIndex);
+        return SBlock(1);
       case 6:
-        return ZBlock(orientationIndex);
+        return ZBlock(1);
       default:
         throw Exception('Block not found');
     }
@@ -80,6 +79,7 @@ class _BoardState extends State<Board> {
   void endGame() {
     timer?.cancel();
     setState(() {});
+    timerKey.currentState!.stopTimer();
     widget.onEndGame();
   }
 
@@ -92,7 +92,6 @@ class _BoardState extends State<Board> {
           shouldDelete = false;
         }
       }
-      // remove line and calculate point
       if (shouldDelete) {
         numberOfLine += 1;
         for (int x = 0; x < gameSize.width; x++) {
@@ -100,9 +99,10 @@ class _BoardState extends State<Board> {
         }
         translateMapDown(y);
       }
-      //
     }
-    widget.onRemoveLine(numberOfLine);
+    setState(() {
+      this.numberOfLine += numberOfLine;
+    });
   }
 
   void translateMapDown(int startY) {
@@ -111,16 +111,6 @@ class _BoardState extends State<Board> {
         map[x][y] = map[x][y - 1];
       }
     }
-  }
-
-  void update(_) async {
-    if (isAbleToMoveDown()) {
-      currentBlock?.move(BlockMovement.down);
-    } else {
-      mergeBlock();
-    }
-    handleMapChange();
-    setState(() {});
   }
 
   void mergeBlock() {
@@ -134,21 +124,6 @@ class _BoardState extends State<Board> {
     }
     currentBlock = getRandomBlock();
     handleMapChange();
-  }
-
-  bool isAbleToMoveDown() {
-    for (final tile in currentBlock!.currentTiles) {
-      if (tile.y + currentBlock!.y + 1 >= gameSize.height) {
-        return false;
-      }
-      if (tile.x + currentBlock!.x >= 0 &&
-          tile.y + currentBlock!.y + 1 > 0 &&
-          tile.y + currentBlock!.y + 1 < gameSize.height &&
-          map[tile.x + currentBlock!.x][tile.y + currentBlock!.y + 1] != null) {
-        return false;
-      }
-    }
-    return true;
   }
 
   bool isValidBlock() {
@@ -168,49 +143,24 @@ class _BoardState extends State<Board> {
     return true;
   }
 
-  bool isAbleToMoveRight() {
-    for (final tile in currentBlock!.currentTiles) {
-      if (tile.x + currentBlock!.x + 1 >= gameSize.width) {
-        return false;
-      }
-      if (tile.x + currentBlock!.x + 1 < gameSize.width &&
-          tile.y + currentBlock!.y >= 0 &&
-          map[tile.x + currentBlock!.x + 1][tile.y + currentBlock!.y] != null) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  bool isAbleToMoveLeft() {
-    for (final tile in currentBlock!.currentTiles) {
-      if (tile.x + currentBlock!.x - 1 < 0) {
-        return false;
-      }
-      if (tile.x + currentBlock!.x - 1 >= 0 &&
-          tile.y + currentBlock!.y >= 0 &&
-          map[tile.x + currentBlock!.x - 1][tile.y + currentBlock!.y] != null) {
-        return false;
-      }
-    }
-    return true;
-  }
-
   void handleKeyEvent(RawKeyEvent event) {
     if (event is RawKeyDownEvent) {
       if (event.isKeyPressed(LogicalKeyboardKey.arrowRight)) {
-        if (isAbleToMoveRight()) {
-          currentBlock?.move(BlockMovement.right);
+        currentBlock?.move(BlockMovement.right, 1);
+        if (!isValidBlock()) {
+          currentBlock?.move(BlockMovement.left, 1);
         }
       }
       if (event.isKeyPressed(LogicalKeyboardKey.arrowLeft)) {
-        if (isAbleToMoveLeft()) {
-          currentBlock?.move(BlockMovement.left);
+        currentBlock?.move(BlockMovement.left, 1);
+        if (!isValidBlock()) {
+          currentBlock?.move(BlockMovement.right, 1);
         }
       }
       if (event.isKeyPressed(LogicalKeyboardKey.arrowDown)) {
-        if (isAbleToMoveDown()) {
-          currentBlock?.move(BlockMovement.down);
+        currentBlock?.move(BlockMovement.down, 1);
+        if (!isValidBlock()) {
+          currentBlock?.move(BlockMovement.up, 1);
         }
       }
       if (event.isKeyPressed(LogicalKeyboardKey.arrowUp)) {
@@ -226,14 +176,24 @@ class _BoardState extends State<Board> {
         }
       }
       if (event.isKeyPressed(LogicalKeyboardKey.space)) {
-        while (isAbleToMoveDown()) {
-          currentBlock?.move(BlockMovement.down);
-          setState(() {});
-        }
+        do {
+          currentBlock?.move(BlockMovement.down, 1);
+        } while (isValidBlock());
+        currentBlock?.move(BlockMovement.up, 1);
         mergeBlock();
       }
       setState(() {});
     }
+  }
+
+  void update(_) async {
+    currentBlock?.move(BlockMovement.down, 1);
+    if (!isValidBlock()) {
+      currentBlock?.move(BlockMovement.up, 1);
+      mergeBlock();
+    }
+    handleMapChange();
+    setState(() {});
   }
 
   @override
@@ -258,7 +218,25 @@ class _BoardState extends State<Board> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Expanded(child: Text('sdsd')),
+          Expanded(
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text('LINES'),
+                    Text(numberOfLine.toString()),
+                    const SizedBox(height: 8),
+                    const Text('TIME'),
+                    TimerWidget(key: timerKey),
+                  ],
+                ),
+              ),
+            ),
+          ),
           AspectRatio(
             aspectRatio: gameSize.width / (gameSize.height + 3),
             child: LayoutBuilder(builder: (context, box) {

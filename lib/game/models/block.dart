@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tetris_master/game/models/tile.dart';
 
 enum BlockMovement {
+  up,
   down,
   left,
   right,
@@ -51,6 +52,9 @@ class Block {
 
   void move(BlockMovement blockMovement, [int distance = 1]) {
     switch (blockMovement) {
+      case BlockMovement.up:
+        y -= distance;
+        break;
       case BlockMovement.down:
         y += distance;
         break;

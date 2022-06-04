@@ -36,11 +36,6 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
           Expanded(
             child: Board(
               gameSize: gameSize,
-              onRemoveLine: (quantity) {
-                setState(() {
-                  numberOfLine += quantity;
-                });
-              },
               onEndGame: () {
                 timer?.cancel();
               },
