@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:tetris_master/game/pages/game/widgets/timer.dart';
+import 'package:tetris_master/game/pages/game/widgets/left_board.dart';
 
 import '../../../models/block.dart';
 import '../../../models/tile.dart';
 import 'empty_tile_widget.dart';
-import 'next_blocks.dart';
+import 'right_board.dart';
 import 'tile_widget.dart';
 
 class Board extends StatefulWidget {
@@ -24,7 +24,7 @@ class Board extends StatefulWidget {
 }
 
 class _BoardState extends State<Board> {
-  final timerKey = GlobalKey<TimerWidgetState>();
+  final leftBoardKey = GlobalKey<LeftBoardState>();
   final FocusNode _focusNode = FocusNode();
   late Size gameSize = widget.gameSize;
 
@@ -78,20 +78,12 @@ class _BoardState extends State<Board> {
         children: [
           Expanded(
             child: Align(
-              alignment: Alignment.centerRight,
-              child: Container(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text('LINES'),
-                    Text(numberOfLine.toString()),
-                    const SizedBox(height: 8),
-                    const Text('TIME'),
-                    TimerWidget(key: timerKey),
-                  ],
-                ),
+              alignment: Alignment.topRight,
+              child: LeftBoard(
+                key: leftBoardKey,
+                gameSize: gameSize,
+                numberOfLine: numberOfLine,
+                extraGameHeight: 3,
               ),
             ),
           ),
@@ -143,7 +135,7 @@ class _BoardState extends State<Board> {
           Expanded(
             child: Align(
               alignment: Alignment.topLeft,
-              child: NextBlocks(
+              child: RightBoard(
                 blocks: nextRandomBlocks,
                 gameSize: gameSize,
                 extraGameHeight: 3,
@@ -167,7 +159,6 @@ class _BoardState extends State<Board> {
       isPlaying = true;
       isGameOver = false;
       score = 0;
-      // currentBlock = nextRandomBlocks.first;
       randomNextBlock();
     });
     Future.delayed(const Duration(milliseconds: 100), () {
@@ -179,7 +170,7 @@ class _BoardState extends State<Board> {
   void endGame() {
     timer?.cancel();
     setState(() {});
-    timerKey.currentState!.stopTimer();
+    leftBoardKey.currentState!.stopTimer();
     widget.onEndGame();
   }
 

@@ -22,7 +22,7 @@ class BlockWidget extends StatelessWidget {
             top: e.y * tileSize,
             left: e.x * tileSize,
             child: TileWidget(
-              color: Colors.red,
+              color: e.color,
               size: tileSize,
             ),
           );

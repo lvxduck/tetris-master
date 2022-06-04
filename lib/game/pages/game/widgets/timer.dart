@@ -31,6 +31,9 @@ class TimerWidgetState extends State<TimerWidget> {
   Widget build(BuildContext context) {
     return Text(
       Duration(milliseconds: time).toString().substring(0, 9),
+      style: const TextStyle(
+        fontSize: 24,
+      ),
     );
   }
 }

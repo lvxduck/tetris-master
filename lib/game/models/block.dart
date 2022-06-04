@@ -163,7 +163,7 @@ class TBlock extends Block {
             [Tile(1, 0), Tile(0, 1), Tile(1, 1), Tile(2, 1)],
             [Tile(1, 0), Tile(1, 1), Tile(1, 2), Tile(2, 1)],
           ],
-          color: Colors.blue,
+          color: Colors.purple,
           orientationIndex: orientationIndex,
         );
 }

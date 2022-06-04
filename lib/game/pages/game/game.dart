@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tetris_master/game/pages/game/widgets/board.dart';
 
@@ -31,66 +32,32 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
+      body: Stack(
         children: [
-          Expanded(
-            child: Board(
-              gameSize: gameSize,
-              onEndGame: () {
-                timer?.cancel();
-              },
+          Positioned.fill(
+            child: Image.network(
+              'http://chiase24.com/wp-content/uploads/2022/02/Tong-hop-cac-hinh-anh-background-dep-nhat-21.jpg',
+              fit: BoxFit.cover,
             ),
-            // child: Row(
-            //   mainAxisAlignment: MainAxisAlignment.center,
-            //   children: [
-            //     Expanded(
-            //       child: Align(
-            //         alignment: Alignment.centerRight,
-            //         child: Container(
-            //           padding: const EdgeInsets.all(16),
-            //           child: Column(
-            //             crossAxisAlignment: CrossAxisAlignment.end,
-            //             mainAxisAlignment: MainAxisAlignment.center,
-            //             children: [
-            //               const Text('LINES'),
-            //               Text(numberOfLine.toString()),
-            //               const SizedBox(height: 8),
-            //               const Text('TIME'),
-            //               Text(Duration(milliseconds: time)
-            //                   .toString()
-            //                   .substring(0, 9)),
-            //             ],
-            //           ),
-            //         ),
-            //       ),
-            //     ),
-            //     AspectRatio(
-            //       aspectRatio: gameSize.width / (gameSize.height + 3),
-            //       child: Board(
-            //         gameSize: gameSize,
-            //         onRemoveLine: (quantity) {
-            //           setState(() {
-            //             numberOfLine += quantity;
-            //           });
-            //         },
-            //         onEndGame: () {
-            //           timer?.cancel();
-            //         },
-            //       ),
-            //     ),
-            //     Expanded(
-            //       child: Align(
-            //         alignment: Alignment.topLeft,
-            //         child: NextBlocks(
-            //           gameSize: gameSize,
-            //           extraGameHeight: 3,
-            //         ),
-            //       ),
-            //     ),
-            //   ],
-            // ),
           ),
-          const GroupButtonControls(),
+          const Positioned.fill(
+            child: ColoredBox(
+              color: Colors.black45,
+            ),
+          ),
+          Column(
+            children: [
+              Expanded(
+                child: Board(
+                  gameSize: gameSize,
+                  onEndGame: () {
+                    timer?.cancel();
+                  },
+                ),
+              ),
+              const GroupButtonControls(),
+            ],
+          ),
         ],
       ),
     );
