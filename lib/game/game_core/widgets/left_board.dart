@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tetris_master/game/game_core/timer.dart';
+import 'package:tetris_master/game/game_core/widgets/timer.dart';
 import 'package:tetris_master/game/models/block.dart';
 
 import 'block_widget.dart';
@@ -69,7 +69,10 @@ class LeftBoardState extends State<LeftBoard> {
                         width: tileSize * 4,
                         height: tileSize * 3,
                       )
-                    : BlockWidget(block: widget.holdBlock!, tileSize: tileSize);
+                    : BlockWidget(
+                        block: widget.holdBlock!,
+                        tileSize: tileSize,
+                      );
               },
             ),
           ),

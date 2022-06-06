@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tetris_master/game/data/apis/forty_lines_apis.dart';
-import 'package:tetris_master/game/game_core/board.dart';
+import 'package:tetris_master/game/game_core/game_core.dart';
 import 'package:tetris_master/game/pages/start/pages/forty_lines/end_game/end_game_page.dart';
 import 'package:tetris_master/game/pages/start/widgets/group_button_controls.dart';
 
@@ -12,7 +11,6 @@ class Game extends StatefulWidget {
 }
 
 class _GameState extends State<Game> with SingleTickerProviderStateMixin {
-  final boardKey = GlobalKey<BoardState>();
   final gameSize = const Size(10, 20);
   int time = 0;
 
@@ -40,40 +38,39 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
           Column(
             children: [
               Expanded(
-                child: Board(
-                  key: boardKey,
+                child: GameCore(
                   gameSize: gameSize,
                   onNumberOfLineChange: (numberOfLine) {
                     print(numberOfLine);
                     if (numberOfLine >= 5) {
-                      boardKey.currentState!.endGame();
+                      // boardKey.currentState!.endGame();
                     }
                   },
                   onEndGame: () {
                     var status = EndGameStatus.failure;
-                    if (boardKey.currentState!.numberOfLine >= 5) {
-                      status = EndGameStatus.success;
-                      final fortyLineData = FortyLinesModeApis().get();
-                      final currentResult = boardKey
-                          .currentState!.leftBoardKey.currentState!
-                          .getTime();
-                      if (fortyLineData.personalBest == null ||
-                          fortyLineData.personalBest! > currentResult) {
-                        status = EndGameStatus.newRecord;
-                        FortyLinesModeApis().save(fortyLineData.copyWith(
-                          personalBest: currentResult,
-                        ));
-                      }
-                    }
-
-                    showDialog(
-                      context: context,
-                      builder: (_) => EndGamePage(
-                        status: status,
-                        time: boardKey.currentState!.leftBoardKey.currentState!
-                            .getTime(),
-                      ),
-                    );
+                    // if (boardKey.currentState!.numberOfLine >= 5) {
+                    //   status = EndGameStatus.success;
+                    //   final fortyLineData = FortyLinesModeApis().get();
+                    //   final currentResult = boardKey
+                    //       .currentState!.leftBoardKey.currentState!
+                    //       .getTime();
+                    //   if (fortyLineData.personalBest == null ||
+                    //       fortyLineData.personalBest! > currentResult) {
+                    //     status = EndGameStatus.newRecord;
+                    //     FortyLinesModeApis().save(fortyLineData.copyWith(
+                    //       personalBest: currentResult,
+                    //     ));
+                    //   }
+                    // }
+                    //
+                    // showDialog(
+                    //   context: context,
+                    //   builder: (_) => EndGamePage(
+                    //     status: status,
+                    //     time: boardKey.currentState!.leftBoardKey.currentState!
+                    //         .getTime(),
+                    //   ),
+                    // );
                   },
                 ),
               ),
