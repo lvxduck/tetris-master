@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:tetris_master/game/pages/game/widgets/left_board.dart';
 
-import '../../../models/block.dart';
-import '../../../models/tile.dart';
+import '../models/block.dart';
+import '../models/tile.dart';
 import 'empty_tile_widget.dart';
+import 'left_board.dart';
 import 'right_board.dart';
 import 'tile_widget.dart';
 

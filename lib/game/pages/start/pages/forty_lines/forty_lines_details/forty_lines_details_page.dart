@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:tetris_master/game/core/theme/game_color.dart';
 import 'package:tetris_master/game/core/widgets/tetris_card.dart';
 import 'package:tetris_master/game/data/apis/forty_lines_apis.dart';
-import 'package:tetris_master/game/pages/game/game.dart';
+
+import '../forty_lines_game/forty_lines_game_page.dart';
 
 class FortyLinesDetailPage extends StatelessWidget {
   const FortyLinesDetailPage({Key? key}) : super(key: key);
@@ -70,7 +71,8 @@ class FortyLinesDetailPage extends StatelessWidget {
                   FortyLinesModeApis().get().personalBest == null
                       ? 'N/A'
                       : Duration(
-                          milliseconds: FortyLinesModeApis().get().personalBest,
+                          milliseconds:
+                              FortyLinesModeApis().get().personalBest!,
                         ).toString().substring(0, 9),
                   style: TextStyle(
                     fontWeight: FontWeight.w600,

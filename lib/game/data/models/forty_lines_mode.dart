@@ -1,20 +1,20 @@
-import 'package:json_annotation/json_annotation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'game_mode.dart';
-
+part 'forty_lines_mode.freezed.dart';
 part 'forty_lines_mode.g.dart';
 
-@JsonSerializable()
-class FortyLinesMode extends GameMode {
-  FortyLinesMode({
-    required super.songMode,
-    int? super.personalBest,
-  });
+@freezed
+class FortyLinesMode with _$FortyLinesMode {
+  factory FortyLinesMode({
+    required String songMode,
+    required int? personalBest,
+  }) = _FortyLinesMode;
 
-  factory FortyLinesMode.empty() => FortyLinesMode(songMode: "");
+  factory FortyLinesMode.empty() => FortyLinesMode(
+        songMode: "",
+        personalBest: null,
+      );
 
-  Map<String, dynamic> toJson() => _$FortyLinesModeToJson(this);
-
-  factory FortyLinesMode.fromJson(Map<String, dynamic> json) =>
+  factory FortyLinesMode.fromJson(Map<String, Object?> json) =>
       _$FortyLinesModeFromJson(json);
 }

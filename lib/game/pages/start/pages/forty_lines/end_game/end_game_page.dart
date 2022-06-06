@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tetris_master/game/core/theme/game_color.dart';
 import 'package:tetris_master/game/core/widgets/tetris_button.dart';
 import 'package:tetris_master/game/core/widgets/tetris_card.dart';
-import 'package:tetris_master/game/pages/game/game.dart';
+import 'package:tetris_master/game/pages/start/pages/forty_lines/forty_lines_game/forty_lines_game_page.dart';
 
 enum EndGameStatus {
   newRecord,

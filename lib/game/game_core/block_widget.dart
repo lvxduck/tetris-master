@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tetris_master/game/models/block.dart';
-import 'package:tetris_master/game/pages/game/widgets/tile_widget.dart';
+
+import 'tile_widget.dart';
 
 class BlockWidget extends StatelessWidget {
   const BlockWidget({

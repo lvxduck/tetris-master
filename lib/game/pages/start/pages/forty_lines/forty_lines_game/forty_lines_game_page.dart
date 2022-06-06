@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tetris_master/game/data/apis/forty_lines_apis.dart';
-import 'package:tetris_master/game/data/models/forty_lines_mode.dart';
-import 'package:tetris_master/game/pages/end_game/end_game_page.dart';
-import 'package:tetris_master/game/pages/game/widgets/board.dart';
-
-import '../../group_button_controls.dart';
+import 'package:tetris_master/game/game_core/board.dart';
+import 'package:tetris_master/game/pages/start/pages/forty_lines/end_game/end_game_page.dart';
+import 'package:tetris_master/game/pages/start/widgets/group_button_controls.dart';
 
 class Game extends StatefulWidget {
   const Game({Key? key}) : super(key: key);
@@ -60,14 +58,11 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
                           .currentState!.leftBoardKey.currentState!
                           .getTime();
                       if (fortyLineData.personalBest == null ||
-                          fortyLineData.personalBest > currentResult) {
+                          fortyLineData.personalBest! > currentResult) {
                         status = EndGameStatus.newRecord;
-                        FortyLinesModeApis().save(
-                          FortyLinesMode(
-                            songMode: fortyLineData.songMode,
-                            personalBest: currentResult,
-                          ),
-                        );
+                        FortyLinesModeApis().save(fortyLineData.copyWith(
+                          personalBest: currentResult,
+                        ));
                       }
                     }
 

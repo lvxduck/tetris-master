@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tetris_master/game/core/theme/game_color.dart';
-import 'package:tetris_master/game/pages/forty_lines_details/forty_lines_details_page.dart';
 
+import 'pages/forty_lines/forty_lines_details/forty_lines_details_page.dart';
 import 'widgets/tetris_mode_button.dart';
 
 class StartPage extends ConsumerWidget {

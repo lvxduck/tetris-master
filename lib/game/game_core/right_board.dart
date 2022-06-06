@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:tetris_master/game/models/block.dart';
 
-import '../../../models/block.dart';
 import 'block_widget.dart';
 
 class RightBoard extends StatelessWidget {

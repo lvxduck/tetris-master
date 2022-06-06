@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:tetris_master/game/game_core/timer.dart';
 import 'package:tetris_master/game/models/block.dart';
-import 'package:tetris_master/game/pages/game/widgets/timer.dart';
 
 import 'block_widget.dart';
 
