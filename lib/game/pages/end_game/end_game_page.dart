@@ -1,11 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:tetris_master/game/core/theme/game_color.dart';
 import 'package:tetris_master/game/core/widgets/tetris_button.dart';
+import 'package:tetris_master/game/core/widgets/tetris_card.dart';
 import 'package:tetris_master/game/pages/game/game.dart';
 
+enum EndGameStatus {
+  newRecord,
+  failure,
+  success,
+}
+
 class EndGamePage extends StatefulWidget {
-  const EndGamePage({Key? key, required this.time}) : super(key: key);
+  const EndGamePage({
+    Key? key,
+    required this.time,
+    required this.status,
+  }) : super(key: key);
   final int time;
+  final EndGameStatus status;
 
   @override
   _EndGamePageState createState() => _EndGamePageState();
@@ -21,23 +33,49 @@ class _EndGamePageState extends State<EndGamePage> {
         child: SizedBox(
           width: 320,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(right: 32),
+              TetrisCard(
+                color: GameColor.brown,
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'TIME',
-                      style: TextStyle(fontSize: 21),
-                    ),
+                    if (widget.status == EndGameStatus.newRecord)
+                      Text(
+                        'NEW RECORD',
+                        style: TextStyle(
+                          fontSize: 21,
+                          fontWeight: FontWeight.w600,
+                          color: GameColor.brown[100],
+                        ),
+                      ),
+                    if (widget.status == EndGameStatus.failure)
+                      Text(
+                        'FAILURE',
+                        style: TextStyle(
+                          fontSize: 21,
+                          fontWeight: FontWeight.w600,
+                          color: GameColor.brown[100],
+                        ),
+                      ),
+                    const SizedBox(height: 8),
+                    if (widget.status != EndGameStatus.failure)
+                      Text(
+                        'TIME',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: GameColor.brown[100],
+                        ),
+                      ),
                     Text(
                       Duration(milliseconds: widget.time)
                           .toString()
                           .substring(0, 9),
-                      style: const TextStyle(fontSize: 32),
+                      style: TextStyle(
+                        fontSize: 32,
+                        color: GameColor.brown[100],
+                      ),
                     ),
                   ],
                 ),

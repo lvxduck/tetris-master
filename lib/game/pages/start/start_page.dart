@@ -1,21 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tetris_master/game/core/theme/game_color.dart';
-import 'package:tetris_master/game/data/services/persional_best_services.dart';
-import 'package:tetris_master/game/pages/game/game.dart';
+import 'package:tetris_master/game/pages/forty_lines_details/forty_lines_details_page.dart';
 
 import 'widgets/tetris_mode_button.dart';
 
-class StartPage extends StatefulWidget {
+class StartPage extends ConsumerWidget {
   const StartPage({Key? key}) : super(key: key);
 
   @override
-  _StartPageState createState() => _StartPageState();
-}
-
-class _StartPageState extends State<StartPage> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
     return Scaffold(
+      backgroundColor: Colors.black,
       body: Padding(
         padding: EdgeInsets.only(
           left: MediaQuery.of(context).size.width * 0.14,
@@ -25,12 +21,14 @@ class _StartPageState extends State<StartPage> {
           children: [
             TetrisModeButton(
               color: GameColor.brown,
-              type: '40L',
-              title: '40 LINES',
-              description: 'COMPLETE 40 LINES AS QUICKLY AS POSSIBLE',
+              type: '5L',
+              title: '5 LINES',
+              description: 'COMPLETE 10 LINES AS QUICKLY AS POSSIBLE',
               onTap: () {
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const Game()),
+                  MaterialPageRoute(
+                    builder: (_) => const FortyLinesDetailPage(),
+                  ),
                 );
               },
             ),
@@ -41,8 +39,8 @@ class _StartPageState extends State<StartPage> {
               title: 'BLITZ',
               description: 'A TWO-MINUTE RACE AGAINST THE CLOCK',
               onTap: () {
-                final data = FortyLinesModeService().get();
-                print(data.toJson());
+                // final fortyLinesProvider = ref.watch(fortyLineApiProvider);
+                // print(fortyLinesProvider.get().toJson());
                 // showDialog(
                 //   context: context,
                 //   builder: (_) => EndGamePage(),

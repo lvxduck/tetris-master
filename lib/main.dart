@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:tetris_master/game/core/theme/game_theme.dart';
 import 'package:tetris_master/game/pages/start/start_page.dart';
@@ -6,7 +7,7 @@ import 'package:tetris_master/game/pages/start/start_page.dart';
 void main() async {
   await Hive.initFlutter();
   await Hive.openBox<String>('HIVE');
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {

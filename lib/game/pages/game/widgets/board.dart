@@ -15,9 +15,11 @@ class Board extends StatefulWidget {
     Key? key,
     this.gameSize = const Size(10, 20),
     required this.onEndGame,
+    required this.onNumberOfLineChange,
   }) : super(key: key);
   final Size gameSize;
   final VoidCallback onEndGame;
+  final void Function(int numberOfLines) onNumberOfLineChange;
 
   @override
   BoardState createState() => BoardState();
@@ -196,6 +198,7 @@ class BoardState extends State<Board> {
     setState(() {
       this.numberOfLine += numberOfLine;
     });
+    widget.onNumberOfLineChange(this.numberOfLine);
   }
 
   void translateMapDown(int startY) {
@@ -243,6 +246,7 @@ class BoardState extends State<Board> {
   }
 
   void handleKeyEvent(RawKeyEvent event) {
+    if (timer != null && !timer!.isActive) return;
     if (event is RawKeyDownEvent) {
       if (event.isKeyPressed(LogicalKeyboardKey.keyC)) {
         final block = holdBlock;
