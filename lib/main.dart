@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:tetris_master/game/core/theme/game_theme.dart';
-import 'package:tetris_master/game/pages/game/game.dart';
+import 'package:tetris_master/game/pages/start/start_page.dart';
 
-void main() {
+void main() async {
+  await Hive.initFlutter();
+  await Hive.openBox<String>('HIVE');
   runApp(const MyApp());
 }
 
@@ -17,7 +20,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: GameTheme.themeData,
       // theme: ThemeData.dark().copyWith(),
-      home: const Game(),
+      home: const StartPage(),
     );
   }
 }

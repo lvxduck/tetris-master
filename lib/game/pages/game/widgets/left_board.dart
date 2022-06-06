@@ -10,10 +10,12 @@ class LeftBoard extends StatefulWidget {
     required this.numberOfLine,
     required this.gameSize,
     required this.extraGameHeight,
+    this.holdBlock,
   }) : super(key: key);
   final Size gameSize;
   final int numberOfLine;
   final int extraGameHeight;
+  final Block? holdBlock;
 
   @override
   LeftBoardState createState() => LeftBoardState();
@@ -24,6 +26,10 @@ class LeftBoardState extends State<LeftBoard> {
 
   void stopTimer() {
     timerKey.currentState!.stopTimer();
+  }
+
+  int getTime() {
+    return timerKey.currentState!.getTime();
   }
 
   @override
@@ -58,7 +64,12 @@ class LeftBoardState extends State<LeftBoard> {
             child: LayoutBuilder(
               builder: (context, box) {
                 final tileSize = box.maxWidth / 4;
-                return BlockWidget(block: TBlock(2), tileSize: tileSize);
+                return widget.holdBlock == null
+                    ? SizedBox(
+                        width: tileSize * 4,
+                        height: tileSize * 3,
+                      )
+                    : BlockWidget(block: widget.holdBlock!, tileSize: tileSize);
               },
             ),
           ),

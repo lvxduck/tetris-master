@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tetris_master/game/core/theme/game_color.dart';
+import 'package:tetris_master/game/data/services/persional_best_services.dart';
 import 'package:tetris_master/game/pages/game/game.dart';
 
 import 'widgets/tetris_mode_button.dart';
@@ -39,7 +40,19 @@ class _StartPageState extends State<StartPage> {
               type: 'BLZ',
               title: 'BLITZ',
               description: 'A TWO-MINUTE RACE AGAINST THE CLOCK',
-              onTap: () {},
+              onTap: () {
+                final data = FortyLinesModeService().get();
+                print(data.toJson());
+                // showDialog(
+                //   context: context,
+                //   builder: (_) => EndGamePage(),
+                // );
+                // Navigator.of(context).push(
+                //   MaterialPageRoute(
+                //     builder: (_) => const EndGamePage(),
+                //   ),
+                // );
+              },
             ),
           ],
         ),

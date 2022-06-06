@@ -17,6 +17,10 @@ class TimerWidgetState extends State<TimerWidget> {
     timer?.cancel();
   }
 
+  int getTime() {
+    return time;
+  }
+
   @override
   void initState() {
     timer = Timer.periodic(const Duration(milliseconds: 100), (_) {

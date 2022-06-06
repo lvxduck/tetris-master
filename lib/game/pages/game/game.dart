@@ -1,7 +1,5 @@
-import 'dart:async';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:tetris_master/game/pages/end_game/end_game_page.dart';
 import 'package:tetris_master/game/pages/game/widgets/board.dart';
 
 import '../../group_button_controls.dart';
@@ -14,18 +12,13 @@ class Game extends StatefulWidget {
 }
 
 class _GameState extends State<Game> with SingleTickerProviderStateMixin {
+  final boardKey = GlobalKey<BoardState>();
   final gameSize = const Size(10, 20);
   int numberOfLine = 0;
   int time = 0;
-  Timer? timer;
 
   @override
   void initState() {
-    timer = Timer.periodic(const Duration(milliseconds: 100), (_) {
-      setState(() {
-        time += 100;
-      });
-    });
     super.initState();
   }
 
@@ -49,9 +42,16 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
             children: [
               Expanded(
                 child: Board(
+                  key: boardKey,
                   gameSize: gameSize,
                   onEndGame: () {
-                    timer?.cancel();
+                    showDialog(
+                      context: context,
+                      builder: (_) => EndGamePage(
+                        time: boardKey.currentState!.leftBoardKey.currentState!
+                            .getTime(),
+                      ),
+                    );
                   },
                 ),
               ),

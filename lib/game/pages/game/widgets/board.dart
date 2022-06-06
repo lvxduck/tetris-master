@@ -20,10 +20,10 @@ class Board extends StatefulWidget {
   final VoidCallback onEndGame;
 
   @override
-  _BoardState createState() => _BoardState();
+  BoardState createState() => BoardState();
 }
 
-class _BoardState extends State<Board> {
+class BoardState extends State<Board> {
   final leftBoardKey = GlobalKey<LeftBoardState>();
   final FocusNode _focusNode = FocusNode();
   late Size gameSize = widget.gameSize;
@@ -38,6 +38,7 @@ class _BoardState extends State<Board> {
   bool isGameOver = false;
   int score = 0;
   Block? currentBlock;
+  Block? holdBlock;
   List<Block> nextRandomBlocks = [];
   Timer? timer;
 
@@ -84,6 +85,7 @@ class _BoardState extends State<Board> {
                 gameSize: gameSize,
                 numberOfLine: numberOfLine,
                 extraGameHeight: 3,
+                holdBlock: holdBlock,
               ),
             ),
           ),
@@ -242,6 +244,18 @@ class _BoardState extends State<Board> {
 
   void handleKeyEvent(RawKeyEvent event) {
     if (event is RawKeyDownEvent) {
+      if (event.isKeyPressed(LogicalKeyboardKey.keyC)) {
+        final block = holdBlock;
+        holdBlock = currentBlock;
+        currentBlock = block;
+
+        if (currentBlock == null) {
+          randomNextBlock();
+        } else {
+          currentBlock!.x = holdBlock!.x;
+          currentBlock!.y = holdBlock!.y;
+        }
+      }
       if (event.isKeyPressed(LogicalKeyboardKey.arrowRight)) {
         currentBlock?.move(BlockMovement.right, 1);
         if (!isValidBlock()) {
