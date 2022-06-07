@@ -5,9 +5,6 @@ class GroupButtonControls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 100,
-      child: Text('group button controls'),
-    );
+    return Container(height: 80);
   }
 }

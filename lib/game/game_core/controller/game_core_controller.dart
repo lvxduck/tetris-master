@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tetris_master/game/game_core/models/block.dart';
 import 'package:tetris_master/game/game_core/models/game_config.dart';
 import 'package:tetris_master/game/game_core/widgets/timer.dart';
-import 'package:tetris_master/game/models/block.dart';
-import 'package:tetris_master/game/models/tile.dart';
 
+import '../models/tile.dart';
 import 'base_game_controller.dart';
 
 final gameCoreProvider = AutoDisposeChangeNotifierProvider<GameCoreController>(

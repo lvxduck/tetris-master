@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:tetris_master/game/game_core/models/block.dart';
 import 'package:tetris_master/game/game_core/models/game_config.dart';
 import 'package:tetris_master/game/game_core/widgets/timer.dart';
-import 'package:tetris_master/game/models/block.dart';
 
 import 'block_widget.dart';
 
@@ -23,16 +23,6 @@ class LeftBoard extends StatefulWidget {
 }
 
 class LeftBoardState extends State<LeftBoard> {
-  // final timerKey = GlobalKey<TimerWidgetState>();
-  //
-  // void stopTimer() {
-  //   timerKey.currentState!.stopTimer();
-  // }
-  //
-  // int getTime() {
-  //   return timerKey.currentState!.getTime();
-  // }
-
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, box) {
@@ -65,15 +55,17 @@ class LeftBoardState extends State<LeftBoard> {
             child: LayoutBuilder(
               builder: (context, box) {
                 final tileSize = box.maxWidth / 4;
-                return widget.holdBlock == null
-                    ? SizedBox(
-                        width: tileSize * 4,
-                        height: tileSize * 3,
-                      )
-                    : BlockWidget(
-                        block: widget.holdBlock!,
-                        tileSize: tileSize,
-                      );
+                return Container(
+                  width: tileSize * 4,
+                  height: tileSize * 3,
+                  alignment: Alignment.center,
+                  child: widget.holdBlock == null
+                      ? null
+                      : BlockWidget(
+                          block: widget.holdBlock!,
+                          tileSize: tileSize,
+                        ),
+                );
               },
             ),
           ),

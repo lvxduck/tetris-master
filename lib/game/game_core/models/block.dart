@@ -1,7 +1,8 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:tetris_master/game/models/tile.dart';
+
+import 'tile.dart';
 
 enum BlockMovement {
   up,
@@ -64,11 +65,11 @@ class Block {
       case 3:
         return OBlock(1);
       case 4:
-        return TBlock(1);
+        return TBlock(2);
       case 5:
-        return SBlock(1);
+        return SBlock(2);
       case 6:
-        return ZBlock(1);
+        return ZBlock(2);
       default:
         throw Exception('Block not found');
     }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:tetris_master/game/game_core/models/block.dart';
 import 'package:tetris_master/game/game_core/models/game_config.dart';
-import 'package:tetris_master/game/models/block.dart';
 
 import 'block_widget.dart';
 
@@ -46,13 +46,16 @@ class RightBoard extends StatelessWidget {
             child: LayoutBuilder(
               builder: (context, box) {
                 final tileSize = box.maxWidth / 4;
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ...blocks
-                        .map((e) => BlockWidget(block: e, tileSize: tileSize))
-                        .toList(),
-                  ],
+                return SizedBox(
+                  width: tileSize * 4,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ...blocks
+                          .map((e) => BlockWidget(block: e, tileSize: tileSize))
+                          .toList(),
+                    ],
+                  ),
                 );
               },
             ),

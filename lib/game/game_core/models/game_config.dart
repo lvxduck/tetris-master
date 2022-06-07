@@ -8,7 +8,7 @@ class GameSize {
 class GameConfig {
   GameConfig({
     required this.gameSize,
-    this.extraHeight = 2,
+    this.extraHeight = 3,
     required this.speed,
     required this.accelerator,
   });

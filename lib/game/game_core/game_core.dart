@@ -43,16 +43,23 @@ class GameCore extends ConsumerWidget {
                     Positioned(
                       top: (y + controller.config.extraHeight) * tileSize,
                       left: x * tileSize,
-                      child: controller.map[x][y] == null
-                          ? EmptyTileWidget(
-                              size: tileSize,
-                            )
-                          : TileWidget(
-                              color: controller.map[x][y]!.color,
-                              size: tileSize,
-                            ),
+                      child: EmptyTileWidget(
+                        size: tileSize,
+                      ),
                     ),
                   );
+                  if (controller.map[x][y] != null) {
+                    tiles.add(
+                      Positioned(
+                        top: (y + controller.config.extraHeight) * tileSize,
+                        left: x * tileSize,
+                        child: TileWidget(
+                          color: controller.map[x][y]!.color,
+                          size: tileSize,
+                        ),
+                      ),
+                    );
+                  }
                 }
               }
               if (controller.currentBlock != null) {
