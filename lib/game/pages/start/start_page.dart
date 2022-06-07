@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tetris_master/game/core/theme/game_color.dart';
+import 'package:tetris_master/game/data/apis/forty_lines_apis.dart';
 
 import 'pages/forty_lines/forty_lines_details/forty_lines_details_page.dart';
 import 'widgets/tetris_mode_button.dart';
@@ -39,6 +40,7 @@ class StartPage extends ConsumerWidget {
               title: 'BLITZ',
               description: 'A TWO-MINUTE RACE AGAINST THE CLOCK',
               onTap: () {
+                FortyLinesModeApis().clear();
                 // final fortyLinesProvider = ref.watch(fortyLineApiProvider);
                 // print(fortyLinesProvider.get().toJson());
                 // showDialog(

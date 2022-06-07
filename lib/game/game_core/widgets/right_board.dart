@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tetris_master/game/game_core/models/game_config.dart';
 import 'package:tetris_master/game/models/block.dart';
 
 import 'block_widget.dart';
@@ -11,7 +12,7 @@ class RightBoard extends StatelessWidget {
     required this.blocks,
   }) : super(key: key);
 
-  final Size gameSize;
+  final GameSize gameSize;
   final int extraGameHeight;
   final List<Block> blocks;
 

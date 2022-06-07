@@ -1,7 +1,12 @@
 import 'dart:convert';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
 import 'package:tetris_master/game/data/models/forty_lines_mode.dart';
+
+final fortyLineApisProvider = Provider<FortyLinesModeApis>(
+  (ref) => FortyLinesModeApis(),
+);
 
 class FortyLinesModeApis {
   final Box<String> box = Hive.box('HIVE');
@@ -15,5 +20,9 @@ class FortyLinesModeApis {
 
   Future save(FortyLinesMode data) {
     return box.put(key, jsonEncode(data.toJson()));
+  }
+
+  Future clear() {
+    return box.clear();
   }
 }

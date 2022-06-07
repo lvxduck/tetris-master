@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tetris_master/game/core/theme/game_color.dart';
 import 'package:tetris_master/game/core/widgets/tetris_card.dart';
 import 'package:tetris_master/game/data/apis/forty_lines_apis.dart';
 
 import '../forty_lines_game/forty_lines_game_page.dart';
 
-class FortyLinesDetailPage extends StatelessWidget {
+class FortyLinesDetailPage extends ConsumerWidget {
   const FortyLinesDetailPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
+    final fortyLineApis = ref.watch(fortyLineApisProvider);
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -68,11 +70,10 @@ class FortyLinesDetailPage extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  FortyLinesModeApis().get().personalBest == null
+                  fortyLineApis.get().personalBest == null
                       ? 'N/A'
                       : Duration(
-                          milliseconds:
-                              FortyLinesModeApis().get().personalBest!,
+                          milliseconds: fortyLineApis.get().personalBest!,
                         ).toString().substring(0, 9),
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
@@ -87,7 +88,7 @@ class FortyLinesDetailPage extends StatelessWidget {
           GestureDetector(
             onTap: () {
               Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const Game()),
+                MaterialPageRoute(builder: (_) => const FortyLinesGamePage()),
               );
             },
             child: Container(

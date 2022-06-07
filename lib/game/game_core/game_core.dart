@@ -7,32 +7,16 @@ import 'widgets/left_board.dart';
 import 'widgets/right_board.dart';
 import 'widgets/tile_widget.dart';
 
-class GameCore extends ConsumerStatefulWidget {
-  const GameCore({
-    Key? key,
-    this.gameSize = const Size(10, 20),
-    required this.onEndGame,
-    required this.onNumberOfLineChange,
-  }) : super(key: key);
-  final Size gameSize;
-  final VoidCallback onEndGame;
-  final void Function(int numberOfLines) onNumberOfLineChange;
+class GameCore extends ConsumerWidget {
+  const GameCore({Key? key}) : super(key: key);
 
   @override
-  _BoardState createState() => _BoardState();
-}
-
-class _BoardState extends ConsumerState<GameCore> {
-  final FocusNode focusNode = FocusNode();
-  late GameCoreController controller;
-  late Size gameSize = widget.gameSize;
-
-  @override
-  Widget build(BuildContext context) {
-    controller = ref.watch(gameCoreProvider);
-    FocusScope.of(context).requestFocus(focusNode);
+  Widget build(context, ref) {
+    final controller = ref.watch(gameCoreProvider);
+    FocusScope.of(context).requestFocus(controller.focusNode);
+    final gameSize = controller.config.gameSize;
     return RawKeyboardListener(
-      focusNode: focusNode,
+      focusNode: controller.focusNode,
       onKey: controller.handleKeyEvent,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -41,7 +25,7 @@ class _BoardState extends ConsumerState<GameCore> {
             child: Align(
               alignment: Alignment.topRight,
               child: LeftBoard(
-                gameSize: widget.gameSize,
+                gameSize: gameSize,
                 numberOfLine: controller.numberOfLine,
                 extraGameHeight: 3,
                 holdBlock: controller.holdBlock,
@@ -108,12 +92,5 @@ class _BoardState extends ConsumerState<GameCore> {
         ],
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    controller.timer?.cancel();
-    focusNode.dispose();
   }
 }

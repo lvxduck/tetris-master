@@ -8,7 +8,10 @@ final timeProvider = AutoDisposeStateNotifierProvider<TimeController, int>(
 );
 
 class TimeController extends StateNotifier<int> {
-  TimeController() : super(0) {
+  TimeController() : super(0);
+
+  void init() {
+    state = 0;
     timer = Timer.periodic(const Duration(milliseconds: 100), (_) {
       state += 100;
     });

@@ -1,70 +1,60 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tetris_master/game/data/apis/ramdom_image_apis.dart';
 import 'package:tetris_master/game/game_core/game_core.dart';
-import 'package:tetris_master/game/pages/start/pages/forty_lines/end_game/end_game_page.dart';
 import 'package:tetris_master/game/pages/start/pages/forty_lines/forty_lines_game/forty_lines_game_controller.dart';
+import 'package:tetris_master/game/pages/start/pages/forty_lines/forty_lines_game/forty_lines_game_state.dart';
 import 'package:tetris_master/game/pages/start/widgets/group_button_controls.dart';
 
-class Game extends ConsumerWidget {
-  const Game({Key? key}) : super(key: key);
+import '../../../../../game_core/dialogs/end_game_dialog.dart';
+import 'widgets/game_result.dart';
+
+class FortyLinesGamePage extends ConsumerWidget {
+  const FortyLinesGamePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, ref) {
-    final controller = ref.watch(fortyLineGameProvider.notifier);
+    ref.listen<FortyLinesGameState>(
+      fortyLineGameProvider,
+      (previous, next) {
+        next.whenOrNull(end: (status, time) {
+          showDialog(
+            context: context,
+            builder: (_) => EndGameDialog(
+              onRestart: () {
+                Navigator.of(context).pop();
+                ref.watch(fortyLineGameProvider.notifier).restartGame();
+              },
+              child: GameResult(
+                status: status,
+                time: time,
+              ),
+            ),
+          );
+        });
+      },
+    );
     return Scaffold(
       body: Stack(
         children: [
           Positioned.fill(
-            child: Image.network(
-              'http://chiase24.com/wp-content/uploads/2022/02/Tong-hop-cac-hinh-anh-background-dep-nhat-21.jpg',
+            child: CachedNetworkImage(
+              imageUrl: ref.watch(randomImageProvider),
               fit: BoxFit.cover,
             ),
           ),
           const Positioned.fill(
             child: ColoredBox(
-              color: Colors.black45,
+              color: Colors.black54,
             ),
           ),
           Column(
-            children: [
+            children: const [
               Expanded(
-                child: GameCore(
-                  gameSize: controller.gameSize,
-                  onNumberOfLineChange: (numberOfLine) {
-                    print(numberOfLine);
-                    if (numberOfLine >= 5) {
-                      // boardKey.currentState!.endGame();
-                    }
-                  },
-                  onEndGame: () {
-                    var status = EndGameStatus.failure;
-                    // if (boardKey.currentState!.numberOfLine >= 5) {
-                    //   status = EndGameStatus.success;
-                    //   final fortyLineData = FortyLinesModeApis().get();
-                    //   final currentResult = boardKey
-                    //       .currentState!.leftBoardKey.currentState!
-                    //       .getTime();
-                    //   if (fortyLineData.personalBest == null ||
-                    //       fortyLineData.personalBest! > currentResult) {
-                    //     status = EndGameStatus.newRecord;
-                    //     FortyLinesModeApis().save(fortyLineData.copyWith(
-                    //       personalBest: currentResult,
-                    //     ));
-                    //   }
-                    // }
-                    //
-                    // showDialog(
-                    //   context: context,
-                    //   builder: (_) => EndGamePage(
-                    //     status: status,
-                    //     time: boardKey.currentState!.leftBoardKey.currentState!
-                    //         .getTime(),
-                    //   ),
-                    // );
-                  },
-                ),
+                child: GameCore(),
               ),
-              const GroupButtonControls(),
+              GroupButtonControls(),
             ],
           ),
         ],

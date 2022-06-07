@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tetris_master/game/game_core/models/game_config.dart';
 import 'package:tetris_master/game/game_core/widgets/timer.dart';
 import 'package:tetris_master/game/models/block.dart';
 
@@ -12,7 +13,7 @@ class LeftBoard extends StatefulWidget {
     required this.extraGameHeight,
     this.holdBlock,
   }) : super(key: key);
-  final Size gameSize;
+  final GameSize gameSize;
   final int numberOfLine;
   final int extraGameHeight;
   final Block? holdBlock;
