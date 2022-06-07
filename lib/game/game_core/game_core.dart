@@ -28,12 +28,6 @@ class _BoardState extends ConsumerState<GameCore> {
   late Size gameSize = widget.gameSize;
 
   @override
-  void initState() {
-    ref.read(gameCoreProvider).init(gameSize: gameSize);
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     controller = ref.watch(gameCoreProvider);
     FocusScope.of(context).requestFocus(focusNode);
@@ -47,7 +41,6 @@ class _BoardState extends ConsumerState<GameCore> {
             child: Align(
               alignment: Alignment.topRight,
               child: LeftBoard(
-                key: controller.leftBoardKey,
                 gameSize: widget.gameSize,
                 numberOfLine: controller.numberOfLine,
                 extraGameHeight: 3,
@@ -64,7 +57,7 @@ class _BoardState extends ConsumerState<GameCore> {
                 for (int y = 0; y < gameSize.height; y++) {
                   tiles.add(
                     Positioned(
-                      top: (y + controller.maxBlockHeight) * tileSize,
+                      top: (y + controller.config.extraHeight) * tileSize,
                       left: x * tileSize,
                       child: controller.map[x][y] == null
                           ? EmptyTileWidget(
@@ -85,7 +78,7 @@ class _BoardState extends ConsumerState<GameCore> {
                       key: Key('key :${tile.x} ${tile.y}'),
                       top: (tile.y +
                               controller.currentBlock!.y +
-                              controller.maxBlockHeight) *
+                              controller.config.extraHeight) *
                           tileSize,
                       left: (tile.x + controller.currentBlock!.x) * tileSize,
                       duration: const Duration(milliseconds: 10),

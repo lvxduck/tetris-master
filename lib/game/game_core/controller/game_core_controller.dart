@@ -3,38 +3,40 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tetris_master/game/game_core/widgets/left_board.dart';
+import 'package:tetris_master/game/game_core/models/game_config.dart';
+import 'package:tetris_master/game/game_core/widgets/timer.dart';
 import 'package:tetris_master/game/models/block.dart';
 import 'package:tetris_master/game/models/tile.dart';
 
 import 'base_game_controller.dart';
 
 final gameCoreProvider = AutoDisposeChangeNotifierProvider<GameCoreController>(
-  (ref) => GameCoreController(),
+  (ref) => GameCoreController(
+    timeController: ref.watch(timeProvider.notifier),
+  ),
 );
 
 enum GameState { init, playing, gameOver }
 
 class GameCoreController extends ChangeNotifier with BaseGameController {
-  final leftBoardKey = GlobalKey<LeftBoardState>();
+  GameCoreController({required this.timeController});
+
+  final TimeController timeController;
 
   //game setting
-  Size gameSize = const Size(10, 20);
-  final int maxBlockHeight = 3;
+  late GameConfig config;
 
   //game state
   final List<List<int>> pieces = [];
   List<List<Tile?>> map = [];
   int numberOfLine = 0;
-  GameState gameState = GameState.init;
-  int score = 0;
   Block? currentBlock;
   Block? holdBlock;
   List<Block> nextRandomBlocks = [];
 
-  void init({required Size gameSize}) {
+  void init({required GameConfig config}) {
+    this.config = config;
     start();
-    this.gameSize = gameSize;
   }
 
   @override
@@ -44,20 +46,18 @@ class GameCoreController extends ChangeNotifier with BaseGameController {
       nextRandomBlocks.add(Block.getRandomBlock());
     }
     map = List.generate(
-      gameSize.width.toInt(),
+      config.gameSize.width,
       (index) => List.generate(
-        gameSize.height.toInt(),
+        config.gameSize.height.toInt(),
         (index) => null,
       ),
     );
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       startGame();
     });
   }
 
   void startGame() {
-    gameState = GameState.playing;
-    score = 0;
     randomNextBlock();
     Future.delayed(const Duration(milliseconds: 100), () {
       currentBlock?.move(BlockMovement.down);
@@ -80,23 +80,23 @@ class GameCoreController extends ChangeNotifier with BaseGameController {
   @override
   void endGame() {
     super.endGame();
-    leftBoardKey.currentState!.stopTimer();
-    // widget.onEndGame();
+
+    timeController.stopTimer(); // widget.onEndGame();
     notifyListeners();
   }
 
   void handleMapChange() {
     var numberOfLine = 0;
-    for (int y = 0; y < gameSize.height; y++) {
+    for (int y = 0; y < config.gameSize.height; y++) {
       bool shouldDelete = true;
-      for (int x = 0; x < gameSize.width; x++) {
+      for (int x = 0; x < config.gameSize.width; x++) {
         if (map[x][y] == null) {
           shouldDelete = false;
         }
       }
       if (shouldDelete) {
         numberOfLine += 1;
-        for (int x = 0; x < gameSize.width; x++) {
+        for (int x = 0; x < config.gameSize.width; x++) {
           map[x][y] = null;
         }
         translateMapDown(y);
@@ -109,7 +109,7 @@ class GameCoreController extends ChangeNotifier with BaseGameController {
 
   void translateMapDown(int startY) {
     for (int y = startY; y > 0; y--) {
-      for (int x = 0; x < gameSize.width; x++) {
+      for (int x = 0; x < config.gameSize.width; x++) {
         map[x][y] = map[x][y - 1];
       }
     }
@@ -137,10 +137,10 @@ class GameCoreController extends ChangeNotifier with BaseGameController {
   bool isValidBlock() {
     for (final tile in currentBlock!.currentTiles) {
       if (tile.x + currentBlock!.x < 0 ||
-          tile.x + currentBlock!.x >= gameSize.width) {
+          tile.x + currentBlock!.x >= config.gameSize.width) {
         return false;
       }
-      if (tile.y + currentBlock!.y >= gameSize.height) {
+      if (tile.y + currentBlock!.y >= config.gameSize.height) {
         return false;
       }
       if (tile.y + currentBlock!.y >= 0 &&

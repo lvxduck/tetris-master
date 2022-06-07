@@ -22,15 +22,15 @@ class LeftBoard extends StatefulWidget {
 }
 
 class LeftBoardState extends State<LeftBoard> {
-  final timerKey = GlobalKey<TimerWidgetState>();
-
-  void stopTimer() {
-    timerKey.currentState!.stopTimer();
-  }
-
-  int getTime() {
-    return timerKey.currentState!.getTime();
-  }
+  // final timerKey = GlobalKey<TimerWidgetState>();
+  //
+  // void stopTimer() {
+  //   timerKey.currentState!.stopTimer();
+  // }
+  //
+  // int getTime() {
+  //   return timerKey.currentState!.getTime();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +89,7 @@ class LeftBoardState extends State<LeftBoard> {
                 ),
                 const SizedBox(height: 8),
                 const Text('TIME'),
-                TimerWidget(key: timerKey),
+                TimerWidget(),
               ],
             ),
           ),

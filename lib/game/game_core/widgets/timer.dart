@@ -1,38 +1,36 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class TimerWidget extends StatefulWidget {
-  const TimerWidget({Key? key}) : super(key: key);
+final timeProvider = AutoDisposeStateNotifierProvider<TimeController, int>(
+  (ref) => TimeController(),
+);
 
-  @override
-  TimerWidgetState createState() => TimerWidgetState();
-}
+class TimeController extends StateNotifier<int> {
+  TimeController() : super(0) {
+    timer = Timer.periodic(const Duration(milliseconds: 100), (_) {
+      state += 100;
+    });
+  }
 
-class TimerWidgetState extends State<TimerWidget> {
-  int time = 0;
   Timer? timer;
+
+  int getTime() {
+    return state;
+  }
 
   void stopTimer() {
     timer?.cancel();
   }
+}
 
-  int getTime() {
-    return time;
-  }
-
-  @override
-  void initState() {
-    timer = Timer.periodic(const Duration(milliseconds: 100), (_) {
-      setState(() {
-        time += 100;
-      });
-    });
-    super.initState();
-  }
+class TimerWidget extends ConsumerWidget {
+  const TimerWidget({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
+    final time = ref.watch(timeProvider);
     return Text(
       Duration(milliseconds: time).toString().substring(0, 9),
       style: const TextStyle(

@@ -1,26 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tetris_master/game/game_core/game_core.dart';
 import 'package:tetris_master/game/pages/start/pages/forty_lines/end_game/end_game_page.dart';
+import 'package:tetris_master/game/pages/start/pages/forty_lines/forty_lines_game/forty_lines_game_controller.dart';
 import 'package:tetris_master/game/pages/start/widgets/group_button_controls.dart';
 
-class Game extends StatefulWidget {
+class Game extends ConsumerWidget {
   const Game({Key? key}) : super(key: key);
 
   @override
-  _GameState createState() => _GameState();
-}
-
-class _GameState extends State<Game> with SingleTickerProviderStateMixin {
-  final gameSize = const Size(10, 20);
-  int time = 0;
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
+    final controller = ref.watch(fortyLineGameProvider.notifier);
     return Scaffold(
       body: Stack(
         children: [
@@ -39,7 +29,7 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
             children: [
               Expanded(
                 child: GameCore(
-                  gameSize: gameSize,
+                  gameSize: controller.gameSize,
                   onNumberOfLineChange: (numberOfLine) {
                     print(numberOfLine);
                     if (numberOfLine >= 5) {
