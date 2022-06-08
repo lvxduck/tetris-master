@@ -29,6 +29,19 @@ class GameColor {
   );
   static const int _orangePrimaryValue = 0xFF582929;
 
+  static const MaterialColor turquoise = MaterialColor(
+    _turquoisePrimaryValue,
+    <int, Color>{
+      100: Color(0xFF40E0D0),
+      200: Color(0xFF40E0D0),
+      300: Color(0xFF40E0D0),
+      400: Color(0xFF40E0D0),
+      500: Color(_turquoisePrimaryValue),
+      600: Color(0xFF40E0D0),
+      700: Color(0xFF40E0D0),
+    },
+  );
+  static const int _turquoisePrimaryValue = 0xFF40E0D0;
   static const MaterialColor purple = MaterialColor(
     _orangePrimaryValue,
     <int, Color>{
