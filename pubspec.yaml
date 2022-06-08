@@ -46,6 +46,8 @@ dependencies:
   animated_background: ^2.0.0
   just_audio: ^0.9.24
   just_audio_windows: ^0.1.0
+  flython: ^0.0.6
+  window_manager: ^0.2.5
 
 dev_dependencies:
   flutter_test:
