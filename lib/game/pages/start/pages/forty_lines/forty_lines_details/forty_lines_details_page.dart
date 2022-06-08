@@ -4,7 +4,6 @@ import 'package:tetris_master/game/core/theme/game_color.dart';
 import 'package:tetris_master/game/core/utils/hand_tracker.dart';
 import 'package:tetris_master/game/core/widgets/tetris_card.dart';
 import 'package:tetris_master/game/data/apis/forty_lines_apis.dart';
-import 'package:window_manager/window_manager.dart';
 
 import '../forty_lines_game/forty_lines_game_page.dart';
 
@@ -116,13 +115,8 @@ class FortyLinesDetailPage extends ConsumerWidget {
           const SizedBox(height: 16),
           GestureDetector(
             onTap: () async {
-              var startProcessSuccess = await HandTracker.start();
-              if (startProcessSuccess) {
-                while (await windowManager.isFocused()) {
-                  await Future.delayed(const Duration(milliseconds: 300));
-                }
-                await windowManager.focus();
-              }
+              await HandTracker.start();
+
               // ignore: use_build_context_synchronously
               Navigator.of(context).push(
                 MaterialPageRoute(builder: (_) => const FortyLinesGamePage()),

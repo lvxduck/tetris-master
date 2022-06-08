@@ -1,13 +1,20 @@
 import 'package:flython/flython.dart';
+import 'package:window_manager/window_manager.dart';
 
 class HandTracker extends Flython {
   static bool isStarting = false;
   static HandTracker? _instance;
 
-  static Future<bool> start() async {
+  static Future<void> start() async {
     _instance ??= HandTracker();
     isStarting = true;
-    return await _instance!.initialize('python', 'main.py', false);
+    var isSuccess = await _instance!.initialize('python', 'main.py', false);
+    if (isSuccess) {
+      while (await windowManager.isFocused()) {
+        await Future.delayed(const Duration(milliseconds: 300));
+      }
+      await windowManager.focus();
+    }
   }
 
   static Future<void> stop() async {
