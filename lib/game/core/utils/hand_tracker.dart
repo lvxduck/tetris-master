@@ -1,13 +1,22 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flython/flython.dart';
 import 'package:window_manager/window_manager.dart';
 
-class HandTracker extends Flython {
-  static bool isStarting = false;
-  static HandTracker? _instance;
+final handTrackerProvider = AutoDisposeChangeNotifierProvider(
+  ((ref) => HandTracker()),
+);
 
-  static Future<void> start() async {
+class HandTracker extends Flython with ChangeNotifier {
+  bool isRunning = false;
+  bool isStarting = false;
+  HandTracker? _instance;
+
+  Future<void> start() async {
     _instance ??= HandTracker();
     isStarting = true;
+    notifyListeners();
+
     var isSuccess = await _instance!.initialize('python', 'main.py', false);
     if (isSuccess) {
       while (await windowManager.isFocused()) {
@@ -15,18 +24,20 @@ class HandTracker extends Flython {
       }
       await windowManager.focus();
     }
+    isRunning = true;
+    isStarting = false;
+    notifyListeners();
   }
 
-  static Future<void> stop() async {
-    if (_instance != null) {
-      _instance?.finalize();
-      _instance = null;
-      isStarting = false;
-    }
+  Future<void> stop() async {
+    _instance?.finalize();
+    _instance = null;
+    isRunning = false;
+    notifyListeners();
   }
 
-  static Future<void> toggle() async {
-    if (isStarting) {
+  Future<void> toggle() async {
+    if (isRunning) {
       await stop();
     } else {
       await start();

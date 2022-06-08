@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tetris_master/game/data/apis/ramdom_image_apis.dart';
 import 'package:tetris_master/game/game_core/game_core.dart';
+import 'package:tetris_master/game/game_core/widgets/hand_tracker_widget.dart';
 import 'package:tetris_master/game/pages/start/pages/forty_lines/forty_lines_game/forty_lines_game_controller.dart';
 import 'package:tetris_master/game/pages/start/pages/forty_lines/forty_lines_game/forty_lines_game_state.dart';
 import 'package:tetris_master/game/pages/start/widgets/group_button_controls.dart';
@@ -57,6 +58,7 @@ class FortyLinesGamePage extends ConsumerWidget {
               GroupButtonControls(),
             ],
           ),
+          const HandTrackerWidget(),
         ],
       ),
     );

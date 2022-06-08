@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tetris_master/game/core/theme/game_color.dart';
 import 'package:tetris_master/game/game_core/controller/audio_controller.dart';
+import 'package:tetris_master/game/game_core/widgets/hand_tracker_widget.dart';
 import 'package:tetris_master/game/pages/start/start_controller.dart';
 
 import 'pages/forty_lines/forty_lines_details/forty_lines_details_page.dart';
@@ -73,73 +74,80 @@ class StartPage extends ConsumerWidget {
             }
           }
         },
-        child: Padding(
-          padding: EdgeInsets.only(
-            left: MediaQuery.of(context).size.width * 0.14,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(
+        child: Stack(
+          children: [
+            Padding(
+              padding: EdgeInsets.only(
+                left: MediaQuery.of(context).size.width * 0.14,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  if (currentButtonIndex == 0)
-                    const Icon(Icons.chevron_right_outlined),
-                  Expanded(
-                    child: TetrisModeButton(
-                      color: GameColor.brown,
-                      type: '5L',
-                      title: '5 LINES',
-                      description: 'COMPLETE 10 LINES AS QUICKLY AS POSSIBLE',
-                      onTap: () {
-                        audioController.playClick();
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (_) => const FortyLinesDetailPage(),
-                          ),
-                        );
-                      },
-                    ),
+                  Row(
+                    children: [
+                      if (currentButtonIndex == 0)
+                        const Icon(Icons.chevron_right_outlined),
+                      Expanded(
+                        child: TetrisModeButton(
+                          color: GameColor.brown,
+                          type: '5L',
+                          title: '5 LINES',
+                          description:
+                              'COMPLETE 10 LINES AS QUICKLY AS POSSIBLE',
+                          onTap: () {
+                            audioController.playClick();
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => const FortyLinesDetailPage(),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      if (currentButtonIndex == 1)
+                        const Icon(Icons.chevron_right_outlined),
+                      Expanded(
+                        child: TetrisModeButton(
+                          color: GameColor.orange,
+                          type: 'BLZ',
+                          title: 'BLITZ',
+                          description: 'A TWO-MINUTE RACE AGAINST THE CLOCK',
+                          onTap: () async {
+                            audioController.playClick();
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      if (currentButtonIndex == 2)
+                        const Icon(Icons.chevron_right_outlined),
+                      Expanded(
+                        child: TetrisModeButton(
+                          color: GameColor.purple,
+                          type: 'ZEN',
+                          title: 'ZEN',
+                          description:
+                              'RELAX OR TRAIN IN THIS NEVERENDING MODE',
+                          onTap: () {
+                            audioController.playClick();
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
-              Row(
-                children: [
-                  if (currentButtonIndex == 1)
-                    const Icon(Icons.chevron_right_outlined),
-                  Expanded(
-                    child: TetrisModeButton(
-                      color: GameColor.orange,
-                      type: 'BLZ',
-                      title: 'BLITZ',
-                      description: 'A TWO-MINUTE RACE AGAINST THE CLOCK',
-                      onTap: () async {
-                        audioController.playClick();
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              Row(
-                children: [
-                  if (currentButtonIndex == 2)
-                    const Icon(Icons.chevron_right_outlined),
-                  Expanded(
-                    child: TetrisModeButton(
-                      color: GameColor.purple,
-                      type: 'ZEN',
-                      title: 'ZEN',
-                      description: 'RELAX OR TRAIN IN THIS NEVERENDING MODE',
-                      onTap: () {
-                        audioController.playClick();
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
+            ),
+            const HandTrackerWidget(),
+          ],
         ),
       ),
     );
