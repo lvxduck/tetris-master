@@ -208,6 +208,7 @@ class GameCoreController extends ChangeNotifier with BaseGameController {
         }
       }
       if (event.isKeyPressed(LogicalKeyboardKey.space)) {
+        audioController.playMoveFast();
         do {
           currentBlock?.move(BlockMovement.down, 1);
         } while (_isValidBlock());

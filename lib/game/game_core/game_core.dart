@@ -82,7 +82,23 @@ class GameCore extends ConsumerWidget {
                 }
               }
               return Stack(
-                children: tiles,
+                children: [
+                  ...tiles,
+                  Container(
+                    width: tileSize * controller.config.gameSize.width,
+                    height: tileSize * controller.config.gameSize.height,
+                    margin: EdgeInsets.only(
+                      top: tileSize * controller.config.extraHeight,
+                    ),
+                    decoration: const BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(color: Colors.white, width: 2),
+                        left: BorderSide(color: Colors.white, width: 2),
+                        right: BorderSide(color: Colors.white, width: 2),
+                      ),
+                    ),
+                  )
+                ],
               );
             }),
           ),

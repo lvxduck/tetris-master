@@ -28,4 +28,18 @@ class GameColor {
     },
   );
   static const int _orangePrimaryValue = 0xFF582929;
+
+  static const MaterialColor purple = MaterialColor(
+    _orangePrimaryValue,
+    <int, Color>{
+      100: Color(0xFFFDB9FF),
+      200: Color(0xFFC28DC5),
+      300: Color(0xFFC142E5),
+      400: Color(0xFF6B2B69),
+      500: Color(_purplePrimaryValue),
+      600: Color(0xFF331933),
+      700: Color(0xFF2E162E),
+    },
+  );
+  static const int _purplePrimaryValue = 0xFF582957;
 }

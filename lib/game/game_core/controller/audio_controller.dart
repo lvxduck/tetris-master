@@ -11,10 +11,13 @@ class AudioController extends StateNotifier<bool> {
   }
 
   final backgroundPlayer = AudioPlayer();
+  final clickPlayer = AudioPlayer();
+  final moveFastPlayer = AudioPlayer();
 
   Future<void> _initAudio() async {
     print('start init audio');
     await backgroundPlayer.setLoopMode(LoopMode.all);
+    await backgroundPlayer.setVolume(0.5);
     await backgroundPlayer.setAudioSource(
       AudioSource.uri(
         Uri.parse(
@@ -22,6 +25,21 @@ class AudioController extends StateNotifier<bool> {
         ),
       ),
     );
+    await clickPlayer.setAudioSource(
+      AudioSource.uri(
+        Uri.parse(
+          "https://dm0qx8t0i9gc9.cloudfront.net/previews/audio/BsTwCwBHBjzwub4i4/switch-click-button_GJXJl2NO_NWM.mp3",
+        ),
+      ),
+    );
+    await moveFastPlayer.setAudioSource(
+      AudioSource.uri(
+        Uri.parse(
+          "https://dm0qx8t0i9gc9.cloudfront.net/previews/audio/BsTwCwBHBjzwub4i4/audioblocks-flash-flash-whoosh-swoosh-3_rYefuQM8CwU_NWM.mp3",
+        ),
+      ),
+    );
+
     state = true;
     print('finished init audio');
   }
@@ -32,5 +50,13 @@ class AudioController extends StateNotifier<bool> {
 
   void stopBackgroundMusic() {
     backgroundPlayer.pause();
+  }
+
+  void playClick() {
+    clickPlayer.play();
+  }
+
+  void playMoveFast() {
+    moveFastPlayer.play();
   }
 }
