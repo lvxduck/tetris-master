@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tetris_master/game/game_core/controller/audio_controller.dart';
 import 'package:tetris_master/game/game_core/models/block.dart';
 import 'package:tetris_master/game/game_core/models/game_config.dart';
 import 'package:tetris_master/game/game_core/widgets/timer.dart';
@@ -13,13 +14,18 @@ import 'base_game_controller.dart';
 final gameCoreProvider = AutoDisposeChangeNotifierProvider<GameCoreController>(
   (ref) => GameCoreController(
     timeController: ref.watch(timeProvider.notifier),
+    audioController: ref.watch(audioProvider.notifier),
   ),
 );
 
 class GameCoreController extends ChangeNotifier with BaseGameController {
-  GameCoreController({required this.timeController});
+  GameCoreController({
+    required this.timeController,
+    required this.audioController,
+  });
 
   final TimeController timeController;
+  final AudioController audioController;
   final FocusNode focusNode = FocusNode();
 
   //game setting
@@ -46,6 +52,7 @@ class GameCoreController extends ChangeNotifier with BaseGameController {
   @override
   void start() {
     super.start();
+    audioController.playRandomBackgroundMusic();
     map = List.generate(
       config.gameSize.width,
       (index) => List.generate(
@@ -81,6 +88,7 @@ class GameCoreController extends ChangeNotifier with BaseGameController {
   @override
   void endGame() {
     super.endGame();
+    audioController.stopBackgroundMusic();
     timeController.stopTimer();
   }
 
