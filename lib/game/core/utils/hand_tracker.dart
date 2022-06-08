@@ -32,6 +32,7 @@ class HandTracker extends Flython with ChangeNotifier {
   Future<void> stop() async {
     _instance?.finalize();
     _instance = null;
+    isStarting = false;
     isRunning = false;
     notifyListeners();
   }
