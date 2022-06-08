@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tetris_master/game/core/theme/game_color.dart';
+import 'package:tetris_master/game/core/utils/hand_tracker.dart';
 import 'package:tetris_master/game/core/widgets/tetris_card.dart';
 import 'package:tetris_master/game/data/apis/forty_lines_apis.dart';
+import 'package:window_manager/window_manager.dart';
 
 import '../forty_lines_game/forty_lines_game_page.dart';
 
@@ -103,6 +105,41 @@ class FortyLinesDetailPage extends ConsumerWidget {
               ),
               child: const Text(
                 'START',
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          GestureDetector(
+            onTap: () async {
+              var startProcessSuccess = await HandTracker.start();
+              if (startProcessSuccess) {
+                while (await windowManager.isFocused()) {
+                  await Future.delayed(const Duration(milliseconds: 300));
+                }
+                await windowManager.focus();
+              }
+              // ignore: use_build_context_synchronously
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const FortyLinesGamePage()),
+              );
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: BoxDecoration(
+                color: GameColor.brown[300],
+                border: Border(
+                  top: BorderSide(color: GameColor.brown[400]!, width: 2),
+                  bottom: BorderSide(color: GameColor.brown[700]!, width: 2),
+                  left: BorderSide(color: GameColor.brown[500]!, width: 2),
+                ),
+              ),
+              child: const Text(
+                'START WITH HAND TRACKER',
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
                   color: Colors.white,
