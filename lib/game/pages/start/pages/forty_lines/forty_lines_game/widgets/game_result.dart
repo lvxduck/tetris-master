@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tetris_master/game/core/theme/game_color.dart';
 import 'package:tetris_master/game/core/widgets/tetris_card.dart';
 
 import '../forty_lines_game_state.dart';
 
-class GameResult extends StatelessWidget {
+class GameResult extends ConsumerWidget {
   const GameResult({
     Key? key,
     required this.status,
@@ -15,7 +16,7 @@ class GameResult extends StatelessWidget {
   final EndGameStatus status;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
     return TetrisCard(
       color: GameColor.brown,
       child: Column(

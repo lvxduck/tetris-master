@@ -40,7 +40,7 @@ class FortyLinesGameController extends StateNotifier<FortyLinesGameState> {
   final GameCoreController gameCoreController;
   final FortyLinesModeApis fortyLinesModeApis;
 
-  final maxLine = 1;
+  final maxLine = 5;
 
   final Size gameSize = const Size(10, 20);
 

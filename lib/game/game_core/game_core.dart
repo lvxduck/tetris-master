@@ -13,9 +13,10 @@ class GameCore extends ConsumerWidget {
   @override
   Widget build(context, ref) {
     final controller = ref.watch(gameCoreProvider);
-    FocusScope.of(context).requestFocus(controller.focusNode);
+    // FocusScope.of(context).requestFocus(controller.focusNode);
     final gameSize = controller.config.gameSize;
     return RawKeyboardListener(
+      autofocus: true,
       focusNode: controller.focusNode,
       onKey: controller.handleKeyEvent,
       child: Row(
