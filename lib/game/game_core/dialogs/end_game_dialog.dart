@@ -13,19 +13,6 @@ class EndGameDialogController extends ChangeNotifier {
   int currentButtonIndex = 0;
   final FocusNode focusNode = FocusNode();
 
-  void handleKeyEvent(RawKeyEvent event) {
-    if (event is RawKeyDownEvent) {
-      if (event.isKeyPressed(LogicalKeyboardKey.space)) {
-        currentButtonIndex += 1;
-        if (currentButtonIndex > 1) {
-          currentButtonIndex = 0;
-        }
-      }
-      if (event.isKeyPressed(LogicalKeyboardKey.enter)) {}
-      notifyListeners();
-    }
-  }
-
   void updateButtonIndex() {
     currentButtonIndex += 1;
     if (currentButtonIndex > 1) {
