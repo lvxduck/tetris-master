@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tetris_master/game/core/theme/game_color.dart';
+import 'package:tetris_master/game/core/utils/hand_tracker.dart';
 import 'package:tetris_master/game/core/widgets/tetris_button.dart';
 
 class EndGameDialog extends StatelessWidget {
@@ -35,6 +36,23 @@ class EndGameDialog extends StatelessWidget {
                   child: Padding(
                     padding: EdgeInsets.symmetric(vertical: 8),
                     child: Text('RETRY'),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              TetrisButton(
+                color: GameColor.turquoise,
+                onTap: () {
+                  HandTracker.toggle();
+                },
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: Text(
+                      'TOGGLE HAND TRACKER',
+                      style: TextStyle(color: Colors.brown[600]),
+                    ),
                   ),
                 ),
               ),
