@@ -113,8 +113,8 @@ def triggerMove(pose):
 
 
 win_name = 'hand_tracker'
-win_width = 350
-win_height = 250
+win_width = 400
+win_height = 300
 vid = cv.VideoCapture(0)
 clock = 0
 player_move = None
