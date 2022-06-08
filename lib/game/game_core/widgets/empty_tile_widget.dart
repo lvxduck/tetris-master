@@ -16,7 +16,7 @@ class EmptyTileWidget extends StatelessWidget {
         color: Colors.black,
         border: Border.all(
           width: 0.5,
-          color: Colors.grey,
+          color: Colors.grey[700]!,
         ),
       ),
     );

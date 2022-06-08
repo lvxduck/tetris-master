@@ -13,6 +13,7 @@ class StartPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
+    final audioController = ref.watch(audioProvider.notifier);
     return Scaffold(
       backgroundColor: Colors.black,
       floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
@@ -101,6 +102,21 @@ class StartPage extends ConsumerWidget {
                 await player.play();
                 // await player.stop();
                 // var duration = await player.setUrl('https://foo.com/bar.mp3');
+              },
+            ),
+            const SizedBox(height: 12),
+            TetrisModeButton(
+              color: GameColor.purple,
+              type: 'ZEN',
+              title: 'ZEN',
+              description: 'RELAX OR TRAIN IN THIS NEVERENDING MODE',
+              onTap: () {
+                audioController.playClick();
+                // Navigator.of(context).push(
+                //   MaterialPageRoute(
+                //     builder: (_) => const FortyLinesDetailPage(),
+                //   ),
+                // );
               },
             ),
           ],
